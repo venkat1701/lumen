@@ -244,3 +244,23 @@ describe('formula diagnostics', () => {
     expect(diagnostics.filter((d) => d.ruleId.startsWith('math-'))).toHaveLength(0)
   })
 })
+
+describe('typography', () => {
+  it('keeps punctuation on the same line as the formula it follows', async () => {
+    const { html } = await render('Let it hold at time $t$, and let $Y$ be the outcome.')
+    expect(html).toContain('lmn-tie')
+    // The comma is inside the tie, not left loose in the following text node.
+    expect(html).toMatch(/lmn-tie[\s\S]*?,<\/span>/)
+    expect(html).toContain('and let')
+  })
+
+  it('leaves display maths alone', async () => {
+    const { html } = await render('$$\na = b\n$$')
+    expect(html).not.toContain('lmn-tie')
+  })
+
+  it('does nothing when no punctuation follows', async () => {
+    const { html } = await render('The value $x$ is fine here.')
+    expect(html).not.toContain('lmn-tie')
+  })
+})

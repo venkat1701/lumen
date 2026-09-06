@@ -24,6 +24,7 @@ import { remarkLumenXref } from './plugins/xref.js'
 import { remarkLumenCite } from './plugins/cite.js'
 import { rehypeLumenCode } from './plugins/code.js'
 import { rehypeLumenLineMap } from './plugins/linemap.js'
+import { rehypeLumenTie } from './plugins/tie.js'
 import type { CompileOptions, CompileResult } from './types.js'
 
 export * from './types.js'
@@ -95,6 +96,7 @@ export async function compile(source: string, options: CompileOptions = {}): Pro
       },
     } as never)
     .use(rehypeLumenCode, context, options.highlight ?? true, options.codeTheme ?? 'lumen-light')
+    .use(rehypeLumenTie)
     .use(rehypeLumenLineMap, sink)
 
   let tree: HastRoot

@@ -206,7 +206,7 @@ lmn-aside       lmn-eq           lmn-eq__number
 lmn-xref        lmn-xref--broken      lmn-xref-group
 lmn-cite        lmn-cite__ref         lmn-cite--broken
 lmn-bib         lmn-bib__list         lmn-bib__entry    lmn-bib__marker
-lmn-diagram     lmn-code
+lmn-diagram     lmn-code       lmn-tie
 ```
 
 Every top-level element carries `data-line` (the source line it came from) and

@@ -158,6 +158,8 @@
   font-size: 1.08em;
   font-synthesis: none;
 }
+/* A formula and the punctuation after it travel together. */
+.lmn-tie { white-space: nowrap; }
 .lmn-doc .katex-display > .katex { font-size: 1.15em; }
 /* Computer Modern's hairlines thin out on a dark page; a fraction of a stroke
  * restores the weight they have on paper without smudging the glyphs. */
