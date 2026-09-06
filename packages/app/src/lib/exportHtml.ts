@@ -18,7 +18,7 @@ function collectStyles(): string {
 }
 
 const FONTS =
-  'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;450;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&display=swap'
+  'https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500;1,6..72,600&display=swap'
 
 const escapeHtml = (value: string) =>
   value.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c] as string)
@@ -47,7 +47,7 @@ export function buildStandalone(title: string): string {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${escapeHtml(title)}</title>
-<link rel="stylesheet" href="${FONTS}">
+<link rel="stylesheet" href="${FONTS.replace(/&/g, '&amp;')}">
 <style>
 ${collectStyles()}
 body { margin: 0; background: var(--paper); }

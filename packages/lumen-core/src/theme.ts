@@ -41,9 +41,9 @@ function build(name: string, type: 'light' | 'dark', ink: {
 }
 
 export const lumenLightTheme = build('lumen-light', 'light', {
-  base: '#52565a', strong: '#16181a', quiet: '#83878c', faint: '#9ea2a7', string: '#23394f',
+  base: '#55565c', strong: '#14151a', quiet: '#86878d', faint: '#a0a1a6', string: '#23394f',
 })
 
 export const lumenDarkTheme = build('lumen-dark', 'dark', {
-  base: '#9ca1a6', strong: '#e2e4e6', quiet: '#787d83', faint: '#6b7076', string: '#b7c6d6',
+  base: '#a4a09a', strong: '#e9e6e1', quiet: '#78746f', faint: '#6b6864', string: '#b0c1d3',
 })

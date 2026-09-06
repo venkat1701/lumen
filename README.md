@@ -62,8 +62,20 @@ file with the diagrams and mathematics baked in.
 
 ## The look
 
+Prose is set in **Newsreader**. That is a technical choice as much as an
+aesthetic one: KaTeX sets mathematics in Computer Modern — high contrast,
+vertical stress, sharp terminals — and a body face has to share that colour or
+every equation looks pasted in from another document. Newsreader also carries
+an optical size axis, so the title is set from the display cut and the body
+from the text cut rather than one drawing scaled to both. Chrome is Archivo,
+whose job is to disappear at 13px, and code is IBM Plex Mono, which has a true
+bold — the syntax theme leans on weight rather than colour, so a synthesised
+one would undo it.
+
 The page is monochrome: one ink, three greys, hairline rules, and a blue-black
-for links that reads as near-black at text size. Nothing in the prose is
+for links that reads as near-black at text size. Dark mode is grounded on
+#111 with a warmed ink, because cool grey text on a neutral black reads flat
+over a long passage. Nothing in the prose is
 tinted, filled or shadowed — a theorem is a rule and a small-caps label, a
 callout is a rule and a run-in italic, a code block is a rule and a change of
 weight. The syntax theme is deliberately near-monochrome for the same reason.

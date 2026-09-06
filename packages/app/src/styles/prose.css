@@ -143,6 +143,7 @@
 .lmn-doc pre {
   margin: 1.2rem 0;
   padding: 0.9rem 0 0.9rem 1.05rem;
+  font-family: var(--mono);
   overflow-x: auto;
   border-left: 1px solid var(--rule-strong);
   font-size: 0.8125rem;
@@ -345,7 +346,7 @@
 }
 .lmn-title h1 {
   margin-bottom: 0.35rem;
-  font-variation-settings: 'opsz' 60;
+  font-variation-settings: 'opsz' 72;
   letter-spacing: -0.024em;
 }
 .lmn-title .lmn-abstract { margin-bottom: 0; padding-bottom: 0; border-bottom: 0; }

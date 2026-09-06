@@ -37,7 +37,7 @@ function themeConfig(): MermaidConfig {
     startOnLoad: false,
     securityLevel: 'strict',
     theme: 'base',
-    fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+    fontFamily: "'Archivo', system-ui, sans-serif",
     flowchart: { curve: 'basis', htmlLabels: true, padding: 12, nodeSpacing: 44, rankSpacing: 52, useMaxWidth: false },
     sequence: { useMaxWidth: false, actorMargin: 60 },
     gantt: { useMaxWidth: false },
