@@ -18,6 +18,8 @@ export interface RenderBlock {
 export interface CompileResponse {
   id: number
   ok: boolean
+  /** False for the fast first pass, which skips syntax highlighting. */
+  highlighted?: boolean
   error?: string
   blocks?: RenderBlock[]
   meta?: Awaited<ReturnType<typeof compile>>['meta']
@@ -51,6 +53,7 @@ self.addEventListener('message', async (event: MessageEvent<CompileRequest>) => 
 
     const response: CompileResponse = {
       id, ok: true, blocks,
+      highlighted: options?.highlight !== false,
       meta: result.meta,
       outline: result.outline,
       diagnostics: result.diagnostics,

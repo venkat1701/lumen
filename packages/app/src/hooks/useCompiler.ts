@@ -22,6 +22,12 @@ const empty: CompiledDocument = {
  * The last good document stays on screen while the next one is being built, so
  * the preview never blanks between keystrokes, and every request carries a
  * sequence number so a slow compile can't overwrite a newer one.
+ *
+ * The very first pass skips syntax highlighting. Shiki and its regex engine are
+ * over a megabyte and are fetched lazily, which on a cold cache held the whole
+ * document hostage to a code block. Now the paper appears immediately and the
+ * colour arrives a moment later — and because blocks are keyed by content hash,
+ * the second pass re-renders only the code.
  */
 export function useCompiler(
   source: string,
@@ -32,6 +38,9 @@ export function useCompiler(
 ) {
   const workerRef = useRef<Worker | null>(null)
   const sequence = useRef(0)
+  const firstPass = useRef(true)
+  const latest = useRef({ source, codeTheme })
+  latest.current = { source, codeTheme }
   const [document, setDocument] = useState<CompiledDocument>(empty)
   const [busy, setBusy] = useState(false)
   const [failure, setFailure] = useState<string | null>(null)
@@ -55,6 +64,16 @@ export function useCompiler(
         hasDiagrams: data.hasDiagrams ?? false,
         elapsed: data.elapsed ?? 0,
       })
+
+      // The unhighlighted first pass is on screen; go back for the colour.
+      if (data.highlighted === false) {
+        setBusy(true)
+        worker.postMessage({
+          id: ++sequence.current,
+          source: latest.current.source,
+          options: { codeTheme: latest.current.codeTheme, highlight: true },
+        })
+      }
     }
     worker.onerror = () => { setBusy(false); setFailure('The compiler worker stopped responding.') }
 
@@ -69,7 +88,9 @@ export function useCompiler(
     const wait = sequence.current === 0 ? 0 : delay
     const timer = setTimeout(() => {
       setBusy(true)
-      worker.postMessage({ id: ++sequence.current, source, options: { codeTheme } })
+      const highlight = !firstPass.current
+      firstPass.current = false
+      worker.postMessage({ id: ++sequence.current, source, options: { codeTheme, highlight } })
     }, wait)
     return () => clearTimeout(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps

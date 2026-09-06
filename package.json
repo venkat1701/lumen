@@ -25,5 +25,9 @@
   "homepage": "https://github.com/venkat1701/lumen#readme",
   "engines": {
     "node": ">=20"
+  },
+  "devDependencies": {
+    "netlify-cli": "^27.5.0",
+    "puppeteer-core": "^24.43.1"
   }
 }
