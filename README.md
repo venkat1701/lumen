@@ -1,0 +1,99 @@
+# Lumen
+
+Markdown can't render mathematics, has no idea what a theorem is, and turns
+diagrams into flat pictures. So research writing ends up in LaTeX, which is
+slow to preview, or in Markdown plus a pile of conventions no two tools agree
+on.
+
+Lumen is a Markdown superset for research writing, and a reader that displays
+it well and fast.
+
+```
+::: theorem "Cauchy–Schwarz" {#thm:cs}
+$$ |\langle x,y\rangle| \le \|x\|\,\|y\| $$
+:::
+
+By @thm:cs the bound in @eq:flux holds for all $t > 0$ [@fick1855].
+```
+
+Renders as **Theorem 2.1 (Cauchy–Schwarz)**, with `@thm:cs` becoming a link
+that shows the theorem when you hover it, `@eq:flux` becoming "Eq. (7)", and
+`[@fick1855]` becoming "[1]" with a reference list built for you.
+
+## Run it
+
+```bash
+npm install
+npm run dev
+```
+
+The app opens with a sample paper loaded. Paste over it, or drop a `.lmd` or
+`.md` file anywhere on the page.
+
+```bash
+npm run build     # both packages
+npm test          # compiler test suite
+```
+
+## What it does
+
+**Mathematics** — `$x$` and `$$…$$`, rendered with KaTeX during compilation,
+never on the main thread. Label a display equation and it gets a number in the
+margin and a citable id.
+
+**Typed blocks** — theorem, lemma, definition, proof, figure, table, callouts
+and margin asides, written as `::: kind "Title" {#id}`. Numbered automatically,
+by section or continuously, following AMS conventions by default.
+
+**Cross-references** — `@thm:cs` resolves to "Theorem 2.1" and links to it.
+Hovering shows the target inline, so following a reference never means losing
+your place. A reference that points at nothing says so instead of vanishing.
+
+**Citations** — `[@key]` against a BibTeX block, numeric or author-year, with
+the bibliography assembled in the right order.
+
+**Diagrams** — Mermaid, themed to match the page in both light and dark, with
+pan, zoom, fit-to-view, hover-to-trace-connections, click-to-focus, fullscreen,
+and SVG or PNG export.
+
+**Export** — print to a PDF that looks typeset, or save one self-contained HTML
+file with the diagrams and mathematics baked in.
+
+## How it stays fast
+
+The whole compiler runs in a Web Worker, so parsing never competes with typing.
+Each top-level block is hashed during compilation and keyed by that hash, so
+editing one paragraph of a long paper re-renders that paragraph and nothing
+else. Mermaid — half a megabyte — loads only if a document contains a diagram,
+and rendered diagrams are cached by source. The syntax highlighter loads only
+the languages a document actually uses.
+
+There is deliberately no virtual scrolling: it breaks in-page find, printing
+and anchor links, all of which this audience uses. `content-visibility` does
+most of the same work without breaking any of them.
+
+## Layout
+
+```
+packages/lumen-core   the format: parser, plugins, compiler. No React.
+packages/app          the reader and editor: Vite, React 19, TypeScript
+docs/spec/lumen-1.0.md the format specification
+```
+
+`lumen-core` has no dependency on the application and can be used on its own:
+
+```js
+import { compile } from 'lumen-core'
+
+const { tree, diagnostics, outline, meta } = await compile(source)
+```
+
+It returns a hast tree rather than an HTML string, so React can diff it and
+nothing needs `dangerouslySetInnerHTML`. See
+[the specification](docs/spec/lumen-1.0.md) for the full syntax, the class-name
+contract and the diagnostic codes.
+
+## Built on
+
+remark and rehype for Markdown that is actually CommonMark-correct, KaTeX for
+mathematics, Shiki for code, Mermaid for diagrams, CodeMirror 6 for the editor.

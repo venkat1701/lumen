@@ -1,0 +1,354 @@
+/* ------------------------------------------------------------------ *
+ * The document itself.
+ *
+ * The page is a two-column grid: the text column at roughly 68 characters,
+ * and a margin column that holds asides. Everything else — theorems, figures,
+ * equations — sits in the text column and takes its rhythm from it.
+ * ------------------------------------------------------------------ */
+
+.lmn-doc {
+  display: grid;
+  grid-template-columns: [main-start] minmax(0, var(--measure)) [main-end margin-start margin-end];
+  justify-content: center;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: var(--step-0);
+  font-variant-numeric: oldstyle-nums proportional-nums;
+  line-height: var(--leading-prose);
+  hanging-punctuation: first last;
+}
+
+.lmn-doc > * { grid-column: main; min-width: 0; }
+
+/* The margin column only appears when the pane is genuinely wide enough for it.
+ * That is a property of the pane, not the window — in split view the window can
+ * be wide while the preview is not — so it is measured with a container query. */
+.lmn-doc > .lmn-aside {
+  grid-column: main;
+  padding-left: 1rem;
+  border-left: 2px solid var(--rule);
+}
+
+@container prose (min-width: 54rem) {
+  /* Figures earn the margin column: diagrams and wide tables are the one thing
+   * a 68-character measure cannot hold. */
+  .lmn-doc > .lmn-figure { grid-column: main-start / margin-end; }
+  .lmn-doc > .lmn-figure .lmn-caption { max-width: var(--measure); }
+
+  .lmn-doc {
+    grid-template-columns:
+      [main-start] minmax(0, var(--measure))
+      [main-end margin-start] var(--margin-col) [margin-end];
+    column-gap: var(--gutter);
+  }
+  .lmn-doc > .lmn-aside {
+    grid-column: margin;
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
+/* Offscreen blocks cost nothing to keep around. */
+.lmn-doc > * { content-visibility: auto; contain-intrinsic-size: auto 4rem; }
+.lmn-doc > h1, .lmn-doc > h2, .lmn-doc > h3 { content-visibility: visible; }
+
+/* ---------------------------- Headings ---------------------------- */
+
+.lmn-doc :is(h1, h2, h3, h4, h5, h6) {
+  margin: 0;
+  color: var(--ink);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+  letter-spacing: -0.011em;
+  text-wrap: balance;
+  scroll-margin-top: 2rem;
+}
+.lmn-doc h1 { margin-bottom: 0.9rem; font-size: var(--step-4); letter-spacing: -0.02em; }
+.lmn-doc h2 { margin: 1.7rem 0 0.6rem; font-size: var(--step-3); }
+.lmn-doc h3 { margin: 1.2rem 0 0.4rem; font-size: var(--step-2); }
+.lmn-doc h4 { margin: 0.95rem 0 0.25rem; font-size: var(--step-1); }
+.lmn-doc :is(h5, h6) { margin: 0.85rem 0 0.2rem; font-size: var(--step-0); }
+.lmn-doc h6 { color: var(--ink-2); font-style: italic; font-weight: 600; }
+.lmn-doc :is(h2, h3) + * { margin-top: 0; }
+
+/* ------------------------------ Text ------------------------------ */
+
+.lmn-doc p { margin: 0 0 1.05em; }
+.lmn-doc > p:last-child { margin-bottom: 0; }
+.lmn-doc strong { font-weight: 700; }
+.lmn-doc em { font-style: italic; }
+.lmn-doc sup, .lmn-doc sub { font-size: 0.72em; line-height: 0; }
+
+.lmn-doc a {
+  color: var(--accent);
+  text-decoration-line: underline;
+  text-decoration-thickness: 0.055em;
+  text-underline-offset: 0.16em;
+  text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  transition: color 100ms var(--ease), text-decoration-color 100ms var(--ease);
+}
+.lmn-doc a:hover { color: var(--accent-hover); text-decoration-color: currentColor; }
+
+.lmn-doc :is(ul, ol) { margin: 0 0 1.05em; padding-left: 1.4em; }
+.lmn-doc li { margin-bottom: 0.3em; }
+.lmn-doc li::marker { color: var(--ink-3); }
+.lmn-doc li > :is(ul, ol) { margin-top: 0.3em; margin-bottom: 0; }
+.lmn-doc li input[type='checkbox'] { margin-right: 0.4em; accent-color: var(--accent); }
+
+.lmn-doc blockquote {
+  margin: 1.2rem 0;
+  padding-left: 1.15rem;
+  border-left: 2px solid var(--rule-strong);
+  color: var(--ink-2);
+  font-style: italic;
+}
+.lmn-doc blockquote > :last-child { margin-bottom: 0; }
+
+.lmn-doc hr {
+  margin: 2rem auto;
+  width: 4rem;
+  border: 0;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.lmn-doc img { display: block; max-width: 100%; height: auto; margin: 0 auto; border-radius: var(--radius-doc); }
+
+/* ----------------------------- Tables ----------------------------- */
+
+.lmn-doc > table, .lmn-doc .lmn-figure table { width: 100%; }
+.lmn-doc table {
+  margin: 1.15rem 0;
+  border-collapse: collapse;
+  font-size: 0.94em;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.lmn-doc th, .lmn-doc td {
+  padding: 0.42em 0.7em;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: baseline;
+}
+.lmn-doc thead th { border-bottom: 1.5px solid var(--rule-strong); font-weight: 600; }
+.lmn-doc tbody tr:last-child td { border-bottom: 1px solid var(--rule-strong); }
+
+/* ------------------------------ Code ------------------------------ */
+
+.lmn-doc code {
+  padding: 0.1em 0.32em;
+  border-radius: var(--radius-doc);
+  background: var(--sunken-bg);
+  font-family: var(--mono);
+  font-size: 0.84em;
+}
+.lmn-doc pre {
+  margin: 1.2rem 0;
+  padding: 0.95rem 1.1rem;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-doc);
+  background: var(--sunken-bg);
+  font-size: 0.8125rem;
+  line-height: 1.62;
+  tab-size: 2;
+}
+.lmn-doc pre code { padding: 0; border-radius: 0; background: none; font-size: inherit; }
+.lmn-code { color: var(--lmn-tok-light); }
+.lmn-code span { color: var(--lmn-tok-light); }
+[data-theme='dark'] .lmn-code, [data-theme='dark'] .lmn-code span { color: var(--lmn-tok-dark); }
+
+/* ------------------------------ Math ------------------------------ */
+
+.lmn-doc .katex { font-size: 1.06em; }
+.lmn-doc .math-display, .lmn-doc .katex-display { margin: 0; }
+.lmn-doc .katex-display > .katex { white-space: normal; }
+.lmn-doc > .math-display, .lmn-doc > .katex-display {
+  margin: 1.2rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.15rem 0;
+}
+
+.lmn-eq {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.2rem 0;
+  scroll-margin-top: 2rem;
+}
+.lmn-eq__body { overflow-x: auto; overflow-y: hidden; }
+.lmn-eq__number {
+  color: var(--ink-3);
+  font-family: var(--serif);
+  font-size: 0.94em;
+  font-variant-numeric: lining-nums;
+}
+
+/* ---------------------------- Theorems ---------------------------- */
+
+.lmn-block { margin: 1.3rem 0; scroll-margin-top: 2rem; }
+
+.lmn-theorem {
+  padding-left: 1.15rem;
+  border-left: 2px solid var(--accent-edge);
+}
+.lmn-theorem > p:not(.lmn-block__head) { font-style: italic; }
+.lmn-theorem :is(.lmn-eq, .katex, .math-display) { font-style: normal; }
+.lmn-theorem--definition, .lmn-theorem--example, .lmn-theorem--remark {
+  border-left-color: var(--rule-strong);
+}
+.lmn-theorem--definition > p:not(.lmn-block__head),
+.lmn-theorem--example > p:not(.lmn-block__head),
+.lmn-theorem--remark > p:not(.lmn-block__head) { font-style: normal; }
+
+.lmn-block__head { margin-bottom: 0.35em !important; font-style: normal !important; }
+.lmn-block__label {
+  color: var(--ink);
+  font-weight: 600;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.045em;
+}
+.lmn-theorem .lmn-block__label { color: var(--accent-hover); }
+.lmn-block__title { margin-left: 0.4em; color: var(--ink-2); font-style: italic; }
+
+/* AMS style: the label runs into the first line and the tombstone sits flush
+ * right on the last one. */
+.lmn-proof { color: var(--ink-2); }
+.lmn-proof .lmn-block__head { display: inline; }
+.lmn-proof .lmn-block__label { color: var(--ink-2); }
+.lmn-proof .lmn-block__label::after { content: '.'; margin-right: 0.4em; }
+.lmn-proof .lmn-block__head + p { display: inline; }
+.lmn-proof__end { float: right; margin-left: 0.5em; color: var(--ink-3); }
+
+/* A proof following its theorem belongs to it; don't push them apart. */
+.lmn-block + .lmn-block { margin-top: 0.85rem; }
+
+/* ---------------------------- Callouts ---------------------------- */
+
+.lmn-callout {
+  padding: 0.85rem 1.05rem;
+  border-left: 2px solid var(--accent-edge);
+  border-radius: 0 var(--radius-doc) var(--radius-doc) 0;
+  background: var(--accent-wash);
+  font-size: 0.97em;
+}
+.lmn-callout > :last-child { margin-bottom: 0; }
+.lmn-callout__head { margin-bottom: 0.3em !important; font-weight: 600; }
+.lmn-callout--warning, .lmn-callout--caution { border-left-color: var(--warn); background: var(--warn-wash); }
+.lmn-callout--warning .lmn-callout__head, .lmn-callout--caution .lmn-callout__head { color: var(--warn); }
+.lmn-callout--important { border-left-color: var(--flag); background: var(--flag-wash); }
+.lmn-callout--important .lmn-callout__head { color: var(--flag); }
+.lmn-callout--tip { border-left-color: var(--good); background: var(--good-wash); }
+.lmn-callout--tip .lmn-callout__head { color: var(--good); }
+.lmn-callout--note .lmn-callout__head { color: var(--accent-hover); }
+
+/* ----------------------------- Asides ----------------------------- */
+
+.lmn-aside {
+  margin: 0.35rem 0 1.2rem;
+  color: var(--ink-2);
+  font-size: 0.8125rem;
+  line-height: 1.55;
+}
+.lmn-aside > :last-child { margin-bottom: 0; }
+.lmn-aside__head { margin-bottom: 0.2em !important; color: var(--ink); font-weight: 600; }
+
+
+/* ---------------------- Figures and captions ---------------------- */
+
+.lmn-figure { margin: 1.5rem 0; scroll-margin-top: 2rem; }
+.lmn-figure__body > :first-child { margin-top: 0; }
+.lmn-figure__body > :last-child { margin-bottom: 0; }
+.lmn-caption {
+  margin-top: 0.7rem;
+  color: var(--ink-2);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+.lmn-caption__label {
+  margin-right: 0.45em;
+  color: var(--ink);
+  font-weight: 600;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.045em;
+}
+
+/* --------------------------- Abstract ----------------------------- */
+
+.lmn-abstract {
+  margin: 0 0 1.9rem;
+  padding: 0 0 1.5rem;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink-2);
+  font-size: 0.97em;
+}
+.lmn-abstract__head {
+  margin: 0 0 0.35rem !important;
+  color: var(--ink) !important;
+  font-size: var(--step-0) !important;
+  font-style: italic;
+  font-weight: 600;
+}
+.lmn-abstract > :last-child { margin-bottom: 0; }
+
+/* ------------------- Cross-references and citations --------------- */
+
+.lmn-xref, .lmn-cite__ref {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 100ms var(--ease), color 100ms var(--ease);
+}
+.lmn-xref:hover, .lmn-cite__ref:hover {
+  color: var(--accent-hover);
+  border-bottom-color: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+.lmn-cite { font-variant-numeric: lining-nums; white-space: nowrap; }
+.lmn-xref--broken, .lmn-cite--broken {
+  padding: 0 0.2em;
+  border-radius: var(--radius-doc);
+  background: var(--flag-wash);
+  color: var(--flag);
+  font-family: var(--mono);
+  font-size: 0.82em;
+  cursor: help;
+}
+
+/* --------------------------- References --------------------------- */
+
+.lmn-bib { margin-top: 2.5rem; padding-top: 1.4rem; border-top: 1px solid var(--rule); }
+.lmn-bib__head { margin: 0 0 1rem !important; font-size: var(--step-1) !important; }
+.lmn-bib__list { margin: 0; padding: 0; list-style: none; font-size: 0.9375rem; }
+.lmn-bib__entry {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  margin-bottom: 0.65rem;
+  color: var(--ink-2);
+  line-height: 1.5;
+  scroll-margin-top: 2rem;
+}
+.lmn-bib__entry:target { background: var(--accent-wash); border-radius: var(--radius-doc); }
+.lmn-bib__marker { color: var(--ink-3); font-variant-numeric: lining-nums tabular-nums; }
+.lmn-bib__list:not(:has(.lmn-bib__marker)) .lmn-bib__entry { grid-template-columns: minmax(0, 1fr); }
+
+/* -------------------------- Title block --------------------------- */
+
+.lmn-title { margin-bottom: 2rem; }
+.lmn-title h1 { margin-bottom: 0.4rem; }
+.lmn-title__subtitle {
+  margin: 0 0 0.9rem;
+  color: var(--ink-2);
+  font-size: var(--step-2);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.3;
+}
+.lmn-title__authors {
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.9375rem;
+}
+.lmn-title__date { margin: 0.15rem 0 0; color: var(--ink-3); font-size: 0.875rem; }
+
+.lmn-block--unknown { padding-left: 1.15rem; border-left: 2px dashed var(--rule-strong); }

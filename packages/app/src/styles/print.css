@@ -1,0 +1,71 @@
+/* ------------------------------------------------------------------ *
+ * Print. The browser's own "Save as PDF" is the export path, so this has
+ * to produce a document that would pass as typeset: no chrome, no widows,
+ * and nothing important split across a page break.
+ * ------------------------------------------------------------------ */
+
+@media print {
+  @page {
+    margin: 20mm 18mm 22mm;
+    size: A4;
+  }
+
+  html, body { height: auto; background: #fff; }
+
+  .chrome, .outline, .pane--editor, .status, .problems,
+  .diagram__bar, .diagram__hint, .peek, .overlay { display: none !important; }
+
+  .app, .workspace, .panes { display: block !important; height: auto !important; }
+  .pane--preview { overflow: visible !important; }
+  .sheet-wrap { padding: 0 !important; }
+  .sheet {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: #fff !important;
+    box-shadow: none !important;
+  }
+
+  .lmn-doc {
+    display: block;
+    color: #000;
+    font-size: 10.5pt;
+    line-height: 1.5;
+    orphans: 3;
+    widows: 3;
+  }
+  .lmn-doc > * { content-visibility: visible !important; }
+
+  .lmn-doc :is(h1, h2, h3, h4) { break-after: avoid; page-break-after: avoid; }
+  .lmn-block, .lmn-figure, .lmn-eq, .lmn-callout, .diagram, .lmn-bib__entry, pre, table {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .lmn-bib__head { break-before: page; page-break-before: always; }
+
+  .lmn-aside {
+    margin: 0.6rem 0;
+    padding-left: 0.8rem;
+    border-left: 1pt solid #999;
+    font-size: 8.5pt;
+  }
+
+  .lmn-doc a { color: #000; text-decoration: none; }
+  /* Links are useless on paper unless the address comes with them. */
+  .lmn-doc p > a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    color: #555;
+    font-size: 0.82em;
+    word-break: break-all;
+  }
+  .lmn-xref, .lmn-cite__ref { color: #000; border: 0; }
+
+  .diagram { border: 1pt solid #ccc; background: #fff; }
+  .diagram__stage { height: auto !important; overflow: visible !important; }
+  .diagram__canvas { transform: none !important; }
+  .diagram__canvas svg { max-width: 100% !important; height: auto !important; }
+
+  .lmn-doc pre { border: 1pt solid #ccc; background: #f7f7f7; font-size: 8.5pt; }
+  .lmn-doc code { background: #f2f2f2; }
+}

@@ -1,0 +1,36 @@
+{
+  "name": "@lumen/app",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b --noCheck && vite build",
+    "preview": "vite preview --port 4173"
+  },
+  "dependencies": {
+    "@codemirror/commands": "^6.8.1",
+    "@codemirror/lang-markdown": "^6.3.2",
+    "@codemirror/language": "^6.11.0",
+    "@codemirror/search": "^6.5.10",
+    "@codemirror/state": "^6.5.2",
+    "@codemirror/view": "^6.36.8",
+    "@lezer/highlight": "^1.2.1",
+    "hast-util-to-html": "^9.0.5",
+    "hast-util-to-jsx-runtime": "^2.3.6",
+    "idb-keyval": "^6.2.1",
+    "katex": "^0.16.22",
+    "lumen-core": "*",
+    "mermaid": "^11.6.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@types/hast": "^3.0.4",
+    "@types/react": "^19.1.4",
+    "@types/react-dom": "^19.1.4",
+    "@vitejs/plugin-react": "^4.4.1",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5"
+  }
+}
