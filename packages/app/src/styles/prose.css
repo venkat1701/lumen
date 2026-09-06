@@ -14,6 +14,7 @@
   font-family: var(--serif);
   font-size: var(--step-0);
   font-variant-numeric: oldstyle-nums proportional-nums;
+  font-optical-sizing: auto;
   line-height: var(--leading-prose);
   hanging-punctuation: first last;
 }
@@ -26,7 +27,7 @@
 .lmn-doc > .lmn-aside {
   grid-column: main;
   padding-left: 1rem;
-  border-left: 2px solid var(--rule);
+  border-left: 1px solid var(--rule);
 }
 
 @container prose (min-width: 54rem) {
@@ -80,25 +81,25 @@
 .lmn-doc sup, .lmn-doc sub { font-size: 0.72em; line-height: 0; }
 
 .lmn-doc a {
-  color: var(--accent);
+  color: var(--link);
   text-decoration-line: underline;
-  text-decoration-thickness: 0.055em;
-  text-underline-offset: 0.16em;
-  text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  text-decoration-thickness: 0.05em;
+  text-underline-offset: 0.17em;
+  text-decoration-color: var(--rule-strong);
   transition: color 100ms var(--ease), text-decoration-color 100ms var(--ease);
 }
-.lmn-doc a:hover { color: var(--accent-hover); text-decoration-color: currentColor; }
+.lmn-doc a:hover { color: var(--link-hover); text-decoration-color: currentColor; }
 
 .lmn-doc :is(ul, ol) { margin: 0 0 1.05em; padding-left: 1.4em; }
 .lmn-doc li { margin-bottom: 0.3em; }
 .lmn-doc li::marker { color: var(--ink-3); }
 .lmn-doc li > :is(ul, ol) { margin-top: 0.3em; margin-bottom: 0; }
-.lmn-doc li input[type='checkbox'] { margin-right: 0.4em; accent-color: var(--accent); }
+.lmn-doc li input[type='checkbox'] { margin-right: 0.4em; accent-color: var(--ink-2); }
 
 .lmn-doc blockquote {
   margin: 1.2rem 0;
   padding-left: 1.15rem;
-  border-left: 2px solid var(--rule-strong);
+  border-left: 1px solid var(--rule-strong);
   color: var(--ink-2);
   font-style: italic;
 }
@@ -111,7 +112,7 @@
   border-top: 1px solid var(--rule-strong);
 }
 
-.lmn-doc img { display: block; max-width: 100%; height: auto; margin: 0 auto; border-radius: var(--radius-doc); }
+.lmn-doc img { display: block; max-width: 100%; height: auto; margin: 0 auto; }
 
 /* ----------------------------- Tables ----------------------------- */
 
@@ -134,24 +135,21 @@
 /* ------------------------------ Code ------------------------------ */
 
 .lmn-doc code {
-  padding: 0.1em 0.32em;
-  border-radius: var(--radius-doc);
-  background: var(--sunken-bg);
+  padding: 0.08em 0.28em;
+  background: var(--tone-2);
   font-family: var(--mono);
   font-size: 0.84em;
 }
 .lmn-doc pre {
   margin: 1.2rem 0;
-  padding: 0.95rem 1.1rem;
+  padding: 0.9rem 0 0.9rem 1.05rem;
   overflow-x: auto;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-doc);
-  background: var(--sunken-bg);
+  border-left: 1px solid var(--rule-strong);
   font-size: 0.8125rem;
   line-height: 1.62;
   tab-size: 2;
 }
-.lmn-doc pre code { padding: 0; border-radius: 0; background: none; font-size: inherit; }
+.lmn-doc pre code { padding: 0; background: none; font-size: inherit; }
 .lmn-code { color: var(--lmn-tok-light); }
 .lmn-code span { color: var(--lmn-tok-light); }
 [data-theme='dark'] .lmn-code, [data-theme='dark'] .lmn-code span { color: var(--lmn-tok-dark); }
@@ -190,13 +188,10 @@
 
 .lmn-theorem {
   padding-left: 1.15rem;
-  border-left: 2px solid var(--accent-edge);
+  border-left: 1px solid var(--rule-strong);
 }
 .lmn-theorem > p:not(.lmn-block__head) { font-style: italic; }
 .lmn-theorem :is(.lmn-eq, .katex, .math-display) { font-style: normal; }
-.lmn-theorem--definition, .lmn-theorem--example, .lmn-theorem--remark {
-  border-left-color: var(--rule-strong);
-}
 .lmn-theorem--definition > p:not(.lmn-block__head),
 .lmn-theorem--example > p:not(.lmn-block__head),
 .lmn-theorem--remark > p:not(.lmn-block__head) { font-style: normal; }
@@ -208,7 +203,7 @@
   font-variant-caps: all-small-caps;
   letter-spacing: 0.045em;
 }
-.lmn-theorem .lmn-block__label { color: var(--accent-hover); }
+.lmn-theorem .lmn-block__label { color: var(--ink); }
 .lmn-block__title { margin-left: 0.4em; color: var(--ink-2); font-style: italic; }
 
 /* AMS style: the label runs into the first line and the tombstone sits flush
@@ -226,21 +221,25 @@
 /* ---------------------------- Callouts ---------------------------- */
 
 .lmn-callout {
-  padding: 0.85rem 1.05rem;
-  border-left: 2px solid var(--accent-edge);
-  border-radius: 0 var(--radius-doc) var(--radius-doc) 0;
-  background: var(--accent-wash);
-  font-size: 0.97em;
+  padding-left: 1.15rem;
+  border-left: 1px solid var(--rule-strong);
+  color: var(--ink-2);
 }
 .lmn-callout > :last-child { margin-bottom: 0; }
-.lmn-callout__head { margin-bottom: 0.3em !important; font-weight: 600; }
-.lmn-callout--warning, .lmn-callout--caution { border-left-color: var(--warn); background: var(--warn-wash); }
-.lmn-callout--warning .lmn-callout__head, .lmn-callout--caution .lmn-callout__head { color: var(--warn); }
-.lmn-callout--important { border-left-color: var(--flag); background: var(--flag-wash); }
-.lmn-callout--important .lmn-callout__head { color: var(--flag); }
-.lmn-callout--tip { border-left-color: var(--good); background: var(--good-wash); }
-.lmn-callout--tip .lmn-callout__head { color: var(--good); }
-.lmn-callout--note .lmn-callout__head { color: var(--accent-hover); }
+.lmn-callout__head { display: inline; }
+.lmn-callout__head::after { content: '.'; margin-right: 0.4em; }
+.lmn-callout__head + p { display: inline; }
+.lmn-callout__head {
+  color: var(--ink);
+  font-style: italic;
+  font-weight: 600;
+}
+/* The two that mean "stop and read this" get a heavier rule and full ink. */
+.lmn-callout--warning, .lmn-callout--caution, .lmn-callout--important {
+  border-left-width: 2px;
+  border-left-color: var(--ink);
+  color: var(--ink);
+}
 
 /* ----------------------------- Asides ----------------------------- */
 
@@ -277,11 +276,11 @@
 /* --------------------------- Abstract ----------------------------- */
 
 .lmn-abstract {
-  margin: 0 0 1.9rem;
-  padding: 0 0 1.5rem;
+  margin: 0 0 1.2rem;
+  padding: 0 0 1.4rem;
   border-bottom: 1px solid var(--rule);
   color: var(--ink-2);
-  font-size: 0.97em;
+  font-size: 0.96em;
 }
 .lmn-abstract__head {
   margin: 0 0 0.35rem !important;
@@ -295,20 +294,19 @@
 /* ------------------- Cross-references and citations --------------- */
 
 .lmn-xref, .lmn-cite__ref {
-  color: var(--accent);
+  color: var(--link);
   text-decoration: none;
-  border-bottom: 1px solid transparent;
+  border-bottom: 1px solid var(--rule-strong);
   transition: border-color 100ms var(--ease), color 100ms var(--ease);
 }
 .lmn-xref:hover, .lmn-cite__ref:hover {
-  color: var(--accent-hover);
-  border-bottom-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  color: var(--link-hover);
+  border-bottom-color: currentColor;
 }
 .lmn-cite { font-variant-numeric: lining-nums; white-space: nowrap; }
 .lmn-xref--broken, .lmn-cite--broken {
-  padding: 0 0.2em;
-  border-radius: var(--radius-doc);
-  background: var(--flag-wash);
+  padding: 0 0.15em;
+  border-bottom: 1px solid var(--flag);
   color: var(--flag);
   font-family: var(--mono);
   font-size: 0.82em;
@@ -328,14 +326,29 @@
   line-height: 1.5;
   scroll-margin-top: 2rem;
 }
-.lmn-bib__entry:target { background: var(--accent-wash); border-radius: var(--radius-doc); }
+.lmn-bib__entry:target .lmn-bib__text { box-shadow: inset 0 -0.62em 0 color-mix(in srgb, var(--ink) 9%, transparent); }
 .lmn-bib__marker { color: var(--ink-3); font-variant-numeric: lining-nums tabular-nums; }
 .lmn-bib__list:not(:has(.lmn-bib__marker)) .lmn-bib__entry { grid-template-columns: minmax(0, 1fr); }
 
 /* -------------------------- Title block --------------------------- */
 
-.lmn-title { margin-bottom: 2rem; }
-.lmn-title h1 { margin-bottom: 0.4rem; }
+.lmn-title {
+  margin-bottom: 2.25rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--rule);
+}
+/* An abstract closes the title block itself; two rules in a row is one too many. */
+.lmn-title:has(+ .lmn-abstract) {
+  margin-bottom: 1.4rem;
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+.lmn-title h1 {
+  margin-bottom: 0.35rem;
+  font-variation-settings: 'opsz' 60;
+  letter-spacing: -0.024em;
+}
+.lmn-title .lmn-abstract { margin-bottom: 0; padding-bottom: 0; border-bottom: 0; }
 .lmn-title__subtitle {
   margin: 0 0 0.9rem;
   color: var(--ink-2);
@@ -349,6 +362,6 @@
   color: var(--ink);
   font-size: 0.9375rem;
 }
-.lmn-title__date { margin: 0.15rem 0 0; color: var(--ink-3); font-size: 0.875rem; }
+.lmn-title__date { margin: 0.2rem 0 0; color: var(--ink-3); font-size: 0.875rem; }
 
-.lmn-block--unknown { padding-left: 1.15rem; border-left: 2px dashed var(--rule-strong); }
+.lmn-block--unknown { padding-left: 1.15rem; border-left: 1px dashed var(--rule-strong); }

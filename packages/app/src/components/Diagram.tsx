@@ -21,6 +21,72 @@ const IDENTITY: View = { x: 0, y: 0, k: 1 }
 const NODE_ID = /flowchart-(.+?)-\d+$/
 const EDGE_ID = /L_(.+)_\d+$/
 
+/* ------------------------------------------------------------------ *
+ * Shape colouring
+ *
+ * In a flowchart the shape already carries meaning — a diamond is a decision,
+ * a stadium is a start or an end, a cylinder is a store — but Mermaid draws
+ * them all the same. Classifying each node by the element Mermaid actually
+ * emitted lets CSS give each family its own colour, which is the one place in
+ * this design where colour is doing work rather than decorating.
+ * ------------------------------------------------------------------ */
+
+/* Mermaid renders a stadium and a cylinder with the same <path>, so the shape
+ * can't be recovered reliably from the SVG. The declaration in the source can:
+ * `A([x])` is a stadium and `A[(x)]` is a cylinder, and that is unambiguous. */
+const DECLARATIONS: Array<[string, string]> = [
+  ['([', 'terminal'],   // stadium — a start or an end
+  ['[(', 'data'],       // cylinder — a store
+  ['((', 'event'],      // circle
+  ['[[', 'process'],    // subroutine
+  ['[/', 'data'],       // parallelogram — input or output
+  ['[\\', 'data'],
+  ['{{', 'decision'],   // hexagon
+  ['>', 'data'],        // asymmetric
+  ['[', 'process'],
+  ['(', 'terminal'],
+  ['{', 'decision'],
+]
+
+const DECLARATION = /(?:^|[\s;&|>-])([A-Za-z_][\w-]*)\s*(\(\[|\[\(|\(\(|\[\[|\[\/|\[\\|\{\{|>|\[|\(|\{)/g
+
+function shapeMapFromSource(source: string): Map<string, string> {
+  const map = new Map<string, string>()
+  if (!/^\s*(flowchart|graph)\b/m.test(source)) return map
+  DECLARATION.lastIndex = 0
+  let match: RegExpExecArray | null
+  while ((match = DECLARATION.exec(source))) {
+    const [, id, opener] = match
+    const family = DECLARATIONS.find(([token]) => token === opener)?.[1]
+    // First declaration wins; later mentions of a node carry no brackets.
+    if (family && !map.has(id)) map.set(id, family)
+  }
+  return map
+}
+
+/** Falls back to the element itself for diagram types the source parse skips. */
+function familyFromElement(shape: Element): string {
+  switch (shape.tagName.toLowerCase()) {
+    case 'polygon': return 'decision'
+    case 'circle':
+    case 'ellipse': return 'event'
+    case 'path': return 'data'
+    default: return 'process'
+  }
+}
+
+function paintShapes(root: Element, source: string): void {
+  const declared = shapeMapFromSource(source)
+  for (const node of root.querySelectorAll('g.node')) {
+    const shape = node.querySelector(':scope > rect, :scope > polygon, :scope > circle, :scope > ellipse, :scope > path')
+      ?? node.querySelector('rect, polygon, circle, ellipse, path')
+    if (!shape) continue
+    const key = keyOf(node)
+    const family = (key && declared.get(key)) ?? familyFromElement(shape)
+    shape.classList.add('lmn-shape', `lmn-shape--${family}`)
+  }
+}
+
 function keyOf(node: Element): string | null {
   const id = node.getAttribute('id')
   if (!id) return null
@@ -62,6 +128,7 @@ function highlight(canvas: HTMLElement, node: Element | null): void {
 
 interface StageProps {
   svg: string
+  source: string
   registerFit?: (fit: () => void) => void
   /** Fill the available height instead of sizing to the diagram. */
   fill?: boolean
@@ -71,7 +138,7 @@ const PAD = 26
 const MAX_HEIGHT = 420
 const MIN_HEIGHT = 150
 
-function Stage({ svg, registerFit, fill = false }: StageProps) {
+function Stage({ svg, source, registerFit, fill = false }: StageProps) {
   const stage = useRef<HTMLDivElement>(null)
   const canvas = useRef<HTMLDivElement>(null)
   const [view, setView] = useState<View>(IDENTITY)
@@ -91,9 +158,11 @@ function Stage({ svg, registerFit, fill = false }: StageProps) {
     if (!element) return
     element.removeAttribute('width')
     element.removeAttribute('style')
-    host.replaceChildren(document.importNode(element, true))
+    const imported = document.importNode(element, true)
+    paintShapes(imported, source)
+    host.replaceChildren(imported)
     pinned.current = null
-  }, [svg])
+  }, [svg, source])
 
   /* The frame is sized to the diagram, not the other way round: a wide
    * flowchart gets a short box and a tall one gets a taller box, up to a limit,
@@ -285,7 +354,7 @@ export function Diagram({ source, id }: { source: string; id?: string }) {
     const bitmap = new Image()
     bitmap.onload = () => {
       if (!context) return
-      context.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--page-bg').trim() || '#fff'
+      context.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--paper').trim() || '#fff'
       context.fillRect(0, 0, canvas.width, canvas.height)
       context.drawImage(bitmap, 0, 0, canvas.width, canvas.height)
       canvas.toBlob((blob) => blob && save(blob, `${name}.png`), 'image/png')
@@ -303,8 +372,8 @@ export function Diagram({ source, id }: { source: string; id?: string }) {
   const body = useMemo(() => {
     if (error) return <p className="diagram__error">This diagram didn’t parse.{'\n'}{error}</p>
     if (!svg) return <div className="diagram__stage" aria-busy="true" />
-    return <Stage svg={svg} registerFit={registerFit} />
-  }, [error, svg, registerFit])
+    return <Stage svg={svg} source={source} registerFit={registerFit} />
+  }, [error, svg, source, registerFit])
 
   return (
     <>
@@ -330,7 +399,7 @@ export function Diagram({ source, id }: { source: string; id?: string }) {
                 <button className="btn" type="button" onClick={() => setFull(false)}>Close</button>
               </div>
               <div className="diagram" ref={container}>
-                <Stage svg={svg} fill />
+                <Stage svg={svg} source={source} fill />
               </div>
             </div>,
             document.body,

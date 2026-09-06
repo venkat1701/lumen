@@ -50,9 +50,8 @@ export function buildStandalone(title: string): string {
 <link rel="stylesheet" href="${FONTS}">
 <style>
 ${collectStyles()}
-body { margin: 0; background: var(--app-bg); }
-.export-sheet { container: prose / inline-size; max-width: 62rem; margin: 0 auto; padding: 4rem 3rem 6rem; background: var(--page-bg); min-height: 100vh; }
-.diagram { background: var(--raised-bg); }
+body { margin: 0; background: var(--paper); }
+.export-sheet { container: prose / inline-size; max-width: 52rem; margin: 0 auto; padding: 4.5rem 3rem 7rem; min-height: 100vh; }
 .diagram__stage { height: auto !important; cursor: default; }
 </style>
 </head>

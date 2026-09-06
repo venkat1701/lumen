@@ -87,14 +87,15 @@ than corrected.
 ::: figure {#fig:pipeline}
 ```mermaid
 flowchart LR
-  A[Encounter records] --> B{Coding change<br/>in window?}
+  S([Encounter records]) --> B{Coding change<br/>in window?}
   B -->|yes| C[Drop window]
   B -->|no| D[Estimate lambda-hat]
+  R[(Registry frame)] --> D
   D --> E[Reweight by 1/lambda-hat]
   E --> F{Overlap check<br/>passes?}
   F -->|no| G[Widen frame]
   G --> D
-  F -->|yes| H[Corrected prevalence]
+  F -->|yes| H([Corrected prevalence])
   C --> H
 ```
 The correction path. Windows that fail the overlap check are widened rather

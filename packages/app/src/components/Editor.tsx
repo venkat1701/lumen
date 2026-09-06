@@ -40,28 +40,28 @@ const palette = HighlightStyle.define([
   { tag: tags.heading, color: 'var(--ink)', fontWeight: '600' },
   { tag: tags.strong, color: 'var(--ink)', fontWeight: '600' },
   { tag: tags.emphasis, color: 'var(--ink)', fontStyle: 'italic' },
-  { tag: tags.link, color: 'var(--accent)' },
-  { tag: tags.url, color: 'var(--accent)' },
-  { tag: tags.monospace, color: 'var(--good)' },
+  { tag: tags.link, color: 'var(--link)' },
+  { tag: tags.url, color: 'var(--link)' },
+  { tag: tags.monospace, color: 'var(--ink-2)' },
   { tag: tags.quote, color: 'var(--ink-2)', fontStyle: 'italic' },
   { tag: tags.list, color: 'var(--ink-3)' },
   { tag: tags.contentSeparator, color: 'var(--ink-4)' },
   { tag: tags.processingInstruction, color: 'var(--ink-4)' },
-  { tag: tags.labelName, color: 'var(--accent)' },
+  { tag: tags.labelName, color: 'var(--link)' },
 ])
 
 const theme = EditorView.theme({
   '&': { color: 'var(--ink-2)' },
   '.cm-gutters': { display: 'none' },
-  '.cm-selectionMatch': { background: 'var(--accent-wash)' },
-  '.cm-searchMatch': { background: 'var(--warn-wash)', outline: '1px solid var(--warn)' },
+  '.cm-selectionMatch': { background: 'color-mix(in srgb, var(--ink) 8%, transparent)' },
+  '.cm-searchMatch': { outline: '1px solid var(--ink-3)' },
   '.cm-panels': {
-    background: 'var(--raised-bg)', color: 'var(--ink)',
+    background: 'var(--tone-2)', color: 'var(--ink)',
     borderTop: '1px solid var(--rule)', fontFamily: 'var(--sans)',
   },
   '.cm-panels input, .cm-panels button': {
-    border: '1px solid var(--rule)', borderRadius: '4px',
-    background: 'var(--page-bg)', color: 'var(--ink)', font: 'inherit', padding: '2px 6px',
+    border: '1px solid var(--rule-strong)', borderRadius: '2px',
+    background: 'var(--paper)', color: 'var(--ink)', font: 'inherit', padding: '2px 6px',
   },
 })
 

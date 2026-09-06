@@ -19,53 +19,54 @@ const read = (name: string, fallback: string): string => {
   return value || fallback
 }
 
-/** Mermaid needs resolved colours, so the app's tokens are read out of the
- *  document and handed over as a theme rather than left as `var(...)`. */
+/**
+ * Mermaid is given a wholly neutral theme — paper, ink and one grey for every
+ * line. Shape colour is applied afterwards, in CSS, so it can react to the
+ * theme without a re-render and so the palette lives in one place with the
+ * rest of the design tokens.
+ */
 function themeConfig(): MermaidConfig {
-  const ink = read('--ink', '#17191c')
-  const ink2 = read('--ink-2', '#4c535b')
-  const ink3 = read('--ink-3', '#7f868f')
-  const page = read('--page-bg', '#ffffff')
-  const sunken = read('--sunken-bg', '#f1f2ee')
-  const raised = read('--raised-bg', '#f7f7f4')
-  const rule = read('--rule-strong', '#c7c9c2')
-  const accent = read('--accent', '#17518c')
-  const accentWash = read('--accent-wash', '#e6edf7')
+  const ink = read('--ink', '#16181a')
+  const label = read('--fig-label', '#4a4e52')
+  const line = read('--fig-line', '#8d9196')
+  const paper = read('--paper', '#fcfcfa')
+  const tone = read('--tone', '#f5f5f2')
+  const rule = read('--rule-strong', '#c8c9c4')
 
   return {
     startOnLoad: false,
     securityLevel: 'strict',
     theme: 'base',
     fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
-    flowchart: { curve: 'basis', htmlLabels: true, padding: 14, useMaxWidth: false },
+    flowchart: { curve: 'basis', htmlLabels: true, padding: 12, nodeSpacing: 44, rankSpacing: 52, useMaxWidth: false },
     sequence: { useMaxWidth: false, actorMargin: 60 },
     gantt: { useMaxWidth: false },
     themeVariables: {
-      darkMode: read('--page-bg', '#fff').toLowerCase() < '#800000',
+      darkMode: read('--paper', '#fff').toLowerCase() < '#800000',
       background: 'transparent',
-      fontSize: '14px',
-      primaryColor: page,
-      primaryTextColor: ink,
+      fontSize: '13px',
+      primaryColor: paper,
+      primaryTextColor: label,
       primaryBorderColor: rule,
-      secondaryColor: sunken,
-      tertiaryColor: accentWash,
-      mainBkg: page,
+      secondaryColor: tone,
+      tertiaryColor: tone,
+      mainBkg: paper,
       nodeBorder: rule,
-      lineColor: ink3,
-      textColor: ink,
-      edgeLabelBackground: raised,
-      clusterBkg: sunken,
+      lineColor: line,
+      textColor: label,
+      edgeLabelBackground: paper,
+      clusterBkg: 'transparent',
       clusterBorder: rule,
       titleColor: ink,
-      labelTextColor: ink2,
-      noteBkgColor: accentWash,
-      noteTextColor: ink,
-      noteBorderColor: accent,
-      actorBkg: page,
+      labelTextColor: label,
+      noteBkgColor: tone,
+      noteTextColor: label,
+      noteBorderColor: rule,
+      actorBkg: paper,
       actorBorder: rule,
-      actorTextColor: ink,
-      signalColor: ink2,
-      signalTextColor: ink2,
+      actorTextColor: label,
+      signalColor: line,
+      signalTextColor: label,
     },
   }
 }

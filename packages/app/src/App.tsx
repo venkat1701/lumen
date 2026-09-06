@@ -179,7 +179,7 @@ export function App() {
         <div className="chrome__mark">Lumen<span>{doc.name}</span></div>
         <span className="chrome__spacer" />
 
-        <div className="segmented" role="group" aria-label="View">
+        <div className="tabs" role="group" aria-label="View">
           {MODES.map((option) => (
             <button
               key={option.id}
@@ -192,22 +192,23 @@ export function App() {
           ))}
         </div>
 
-        <button className="btn btn--icon" type="button" onClick={() => setShowOutline((v) => !v)}
-          title="Toggle contents" aria-pressed={showOutline} aria-label="Toggle contents">
-          <Icon name="panel" />
-        </button>
-        <button className="btn btn--icon" type="button" onClick={pickFile} title="Open a file" aria-label="Open a file">
-          <Icon name="file" />
-        </button>
-        <button className="btn btn--icon" type="button" onClick={toggle}
-          title={theme === 'dark' ? 'Use the light theme' : 'Use the dark theme'}
-          aria-label={theme === 'dark' ? 'Use the light theme' : 'Use the dark theme'}>
-          <Icon name={theme === 'dark' ? 'sun' : 'moon'} />
-        </button>
+        <div className="tools">
+          <button className="btn btn--icon" type="button" onClick={() => setShowOutline((v) => !v)}
+            title="Toggle contents" aria-pressed={showOutline} aria-label="Toggle contents">
+            <Icon name="panel" />
+          </button>
+          <button className="btn btn--icon" type="button" onClick={pickFile} title="Open a file" aria-label="Open a file">
+            <Icon name="file" />
+          </button>
+          <button className="btn btn--icon" type="button" onClick={toggle}
+            title={theme === 'dark' ? 'Use the light theme' : 'Use the dark theme'}
+            aria-label={theme === 'dark' ? 'Use the light theme' : 'Use the dark theme'}>
+            <Icon name={theme === 'dark' ? 'sun' : 'moon'} />
+          </button>
 
-        <div style={{ position: 'relative' }}>
+          <div style={{ position: 'relative' }}>
           <button className="btn" type="button" onClick={() => setMenu((v) => !v)} aria-expanded={menu}>
-            <Icon name="download" /> Export
+            Export
           </button>
           {menu ? (
             <div className="menu" style={{ right: 0, top: 'calc(100% + 6px)' }} role="menu">
@@ -218,6 +219,7 @@ export function App() {
               <button type="button" onClick={saveSource}>Lumen source <kbd>⌘S</kbd></button>
             </div>
           ) : null}
+          </div>
         </div>
       </header>
 
@@ -239,10 +241,8 @@ export function App() {
               {problems.length > 0 || failure ? (
                 <>
                   <div className="status">
-                    <span className="status__dot" data-busy={busy} />
                     <span>{busy ? 'Compiling' : `${compiled.elapsed} ms`}</span>
                     <span>{words.toLocaleString()} words</span>
-                    <span className="chrome__spacer" style={{ flex: 1 }} />
                     <button type="button" className={errorCount ? 'status__flag' : undefined}
                       onClick={() => setShowProblems((v) => !v)}>
                       {problems.length} {problems.length === 1 ? 'problem' : 'problems'}
@@ -265,7 +265,6 @@ export function App() {
                 </>
               ) : (
                 <div className="status">
-                  <span className="status__dot" data-busy={busy} />
                   <span>{busy ? 'Compiling' : `Rendered in ${compiled.elapsed} ms`}</span>
                   <span>{words.toLocaleString()} words</span>
                 </div>

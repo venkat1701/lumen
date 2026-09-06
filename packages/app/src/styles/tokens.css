@@ -1,47 +1,54 @@
 /* ------------------------------------------------------------------ *
- * Lumen palette and scale.
+ * Lumen: paper and ink.
  *
- * Two themes, both near-monochrome: a research page earns its colour from
- * the even grey of well-set type, not from decoration. One chromatic accent —
- * a plate blue borrowed from cyanotype printing — carries links and
- * cross-references, and a single rust red is reserved for things that are
- * actually wrong. Nothing else is allowed to be coloured.
+ * The document is monochrome — a single ink, three greys and a rule
+ * colour. Links carry an ink blue-black that reads as near-black at text
+ * size. Nothing in the prose is tinted, filled or shadowed.
+ *
+ * Colour is spent in exactly one place: figures. A flowchart's shapes mean
+ * different things, so they are allowed to look different, and against a
+ * grey page that difference is legible at a glance. The palette for them is
+ * the muted one a journal would print.
  * ------------------------------------------------------------------ */
 
 :root {
-  --app-bg: #eeefec;
-  --page-bg: #fcfcfa;
-  --raised-bg: #f7f7f4;
-  --sunken-bg: #f1f2ee;
+  --paper: #fcfcfa;
+  --tone: #f5f5f2;
+  --tone-2: #eeeeea;
 
-  --ink: #17191c;
-  --ink-2: #4c535b;
-  --ink-3: #7f868f;
-  --ink-4: #a7adb4;
+  --ink: #16181a;
+  --ink-2: #52565a;
+  --ink-3: #83878c;
+  --ink-4: #adb1b5;
 
-  --rule: #dfe0da;
-  --rule-strong: #c7c9c2;
+  --rule: #e3e3df;
+  --rule-strong: #c8c9c4;
 
-  --accent: #17518c;
-  --accent-hover: #0f3a66;
-  --accent-wash: #e6edf7;
-  --accent-edge: #b9cde6;
+  --link: #23394f;
+  --link-hover: #0e2338;
 
-  --flag: #9d3620;
-  --flag-wash: #f8eae6;
-  --warn: #8a5a12;
-  --warn-wash: #f8f0e0;
-  --good: #2b6a4f;
-  --good-wash: #e6f0ea;
+  /* Diagnostics only. Never decoration. */
+  --flag: #8e3b28;
+  --warn: #7d5c1c;
 
-  --shadow-sheet: 0 1px 2px rgb(23 25 28 / 0.05), 0 8px 24px -12px rgb(23 25 28 / 0.12);
-  --shadow-pop: 0 2px 6px rgb(23 25 28 / 0.08), 0 16px 40px -16px rgb(23 25 28 / 0.28);
+  /* Figures */
+  --fig-neutral-fill: #fbfbf9;
+  --fig-neutral-line: #a5a9a3;
+  --fig-decision-fill: #f4efe1;
+  --fig-decision-line: #9d8146;
+  --fig-terminal-fill: #e7efec;
+  --fig-terminal-line: #4f7d72;
+  --fig-event-fill: #f5eae5;
+  --fig-event-line: #9f6852;
+  --fig-data-fill: #e8ebf3;
+  --fig-data-line: #5a6690;
+  --fig-line: #8d9196;
+  --fig-label: #4a4e52;
 
   --serif: 'Source Serif 4', 'Iowan Old Style', Charter, Georgia, serif;
   --sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
-  /* Prose sits at ~68 characters; the margin column holds asides. */
   --measure: 35.5rem;
   --margin-col: 12.5rem;
   --gutter: 2.25rem;
@@ -51,48 +58,48 @@
   --step-1: 1.1875rem;
   --step-2: 1.4375rem;
   --step-3: 1.75rem;
-  --step-4: 2.25rem;
+  --step-4: 2.375rem;
 
   --leading-prose: 1.66;
-  --leading-tight: 1.25;
+  --leading-tight: 1.22;
 
-  --radius-ui: 6px;
-  --radius-doc: 2px;
-
-  --chrome-h: 46px;
+  --chrome-h: 45px;
   --ease: cubic-bezier(0.32, 0.72, 0, 1);
 
   color-scheme: light;
 }
 
 [data-theme='dark'] {
-  --app-bg: #101215;
-  --page-bg: #191c21;
-  --raised-bg: #1f232a;
-  --sunken-bg: #15181c;
+  --paper: #16181b;
+  --tone: #1b1e21;
+  --tone-2: #212428;
 
-  --ink: #dfe2e6;
-  --ink-2: #9aa2ac;
-  --ink-3: #767e88;
-  --ink-4: #5b636d;
+  --ink: #e2e4e6;
+  --ink-2: #9ca1a6;
+  --ink-3: #787d83;
+  --ink-4: #5a5f65;
 
-  --rule: #2a2f37;
-  --rule-strong: #3b424d;
+  --rule: #2a2d31;
+  --rule-strong: #3c4046;
 
-  --accent: #8cb6e8;
-  --accent-hover: #aecdf3;
-  --accent-wash: #1a2836;
-  --accent-edge: #2f4a68;
+  --link: #b7c6d6;
+  --link-hover: #dae4ee;
 
-  --flag: #e08f76;
-  --flag-wash: #2d2019;
-  --warn: #d4a556;
-  --warn-wash: #2b2417;
-  --good: #7cb99b;
-  --good-wash: #1a2620;
+  --flag: #cf8b73;
+  --warn: #bb9a5c;
 
-  --shadow-sheet: 0 1px 2px rgb(0 0 0 / 0.4), 0 10px 30px -14px rgb(0 0 0 / 0.6);
-  --shadow-pop: 0 2px 8px rgb(0 0 0 / 0.45), 0 20px 48px -20px rgb(0 0 0 / 0.7);
+  --fig-neutral-fill: #212528;
+  --fig-neutral-line: #6a6e74;
+  --fig-decision-fill: #2a2519;
+  --fig-decision-line: #bda265;
+  --fig-terminal-fill: #1a2724;
+  --fig-terminal-line: #71a598;
+  --fig-event-fill: #291e1a;
+  --fig-event-line: #bd8b75;
+  --fig-data-fill: #1e2230;
+  --fig-data-line: #838ebb;
+  --fig-line: #767b81;
+  --fig-label: #b6babe;
 
   color-scheme: dark;
 }

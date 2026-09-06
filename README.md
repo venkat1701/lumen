@@ -52,12 +52,26 @@ your place. A reference that points at nothing says so instead of vanishing.
 **Citations** — `[@key]` against a BibTeX block, numeric or author-year, with
 the bibliography assembled in the right order.
 
-**Diagrams** — Mermaid, themed to match the page in both light and dark, with
-pan, zoom, fit-to-view, hover-to-trace-connections, click-to-focus, fullscreen,
-and SVG or PNG export.
+**Diagrams** — Mermaid, with pan, zoom, fit-to-view,
+hover-to-trace-connections, click-to-focus, fullscreen, and SVG or PNG export.
+Node shapes are coloured by what they mean — decision, terminal, store,
+process — read from the diagram source rather than guessed from the drawing.
 
 **Export** — print to a PDF that looks typeset, or save one self-contained HTML
 file with the diagrams and mathematics baked in.
+
+## The look
+
+The page is monochrome: one ink, three greys, hairline rules, and a blue-black
+for links that reads as near-black at text size. Nothing in the prose is
+tinted, filled or shadowed — a theorem is a rule and a small-caps label, a
+callout is a rule and a run-in italic, a code block is a rule and a change of
+weight. The syntax theme is deliberately near-monochrome for the same reason.
+
+Colour is spent in exactly one place: figures, where a flowchart's shapes mean
+different things and are allowed to look different. Against a grey page that
+distinction is legible at a glance, which is the whole point of spending it
+there and nowhere else.
 
 ## How it stays fast
 

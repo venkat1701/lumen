@@ -1,6 +1,7 @@
 import { visit } from 'unist-util-visit'
 import type { Element, Root } from 'hast'
 import type { Context } from '../context.js'
+import { lumenDarkTheme, lumenLightTheme } from '../theme.js'
 
 type Highlighter = {
   codeToHast: (code: string, options: Record<string, unknown>) => Root
@@ -20,7 +21,7 @@ async function getHighlighter(languages: string[]): Promise<Highlighter | null> 
     highlighterPromise = import('shiki')
       .then(({ createHighlighter }) =>
         createHighlighter({
-          themes: ['github-light', 'github-dark-dimmed'],
+          themes: [lumenLightTheme as never, lumenDarkTheme as never],
           langs: [],
         }) as unknown as Promise<Highlighter>)
       .catch(() => null)
@@ -60,7 +61,7 @@ export function rehypeLumenCode(context: Context, enabled: boolean) {
         try {
           const highlighted = highlighter.codeToHast(textOf(code).replace(/\n$/, ''), {
             lang,
-            themes: { light: 'github-light', dark: 'github-dark-dimmed' },
+            themes: { light: 'lumen-light', dark: 'lumen-dark' },
             defaultColor: false,
             cssVariablePrefix: '--lmn-tok-',
           })
