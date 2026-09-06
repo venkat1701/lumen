@@ -7,7 +7,9 @@ import { DocumentView } from './render/Document.js'
 import { Editor } from './components/Editor.js'
 import { Outline } from './components/Outline.js'
 import { Icon } from './components/Icon.js'
+import { ThemeMenu } from './components/ThemeMenu.js'
 import { SAMPLE, SAMPLE_NAME } from './lib/sample.js'
+import { DEFAULT_LIGHT } from './lib/themes.js'
 import { buildStandalone, download } from './lib/exportHtml.js'
 
 type Mode = 'read' | 'split' | 'write'
@@ -27,12 +29,14 @@ export function App() {
   const [menu, setMenu] = useState(false)
   const [firstPaint, setFirstPaint] = useState(true)
 
-  const { document: compiled, busy, failure } = useCompiler(doc.source)
-  const { theme, toggle } = useTheme()
+  const { theme, setTheme, toggle } = useTheme()
+  const { document: compiled, busy, failure } = useCompiler(doc.source, theme.code)
 
   const preview = useRef<HTMLDivElement>(null)
   const editorApi = useRef<{ goToLine: (line: number) => void } | null>(null)
   const syncLock = useRef(0)
+  const restoreTheme = useRef<string | null>(null)
+  const [printPending, setPrintPending] = useState(false)
 
   const setSource = useCallback((source: string) => setDoc((d) => ({ ...d, source })), [setDoc])
 
@@ -154,6 +158,27 @@ export function App() {
     }
   }, [compiled.meta, doc.name])
 
+  /* Code colours are baked into the compiled tree, so a dark theme would print
+   * light text onto white paper. The document is switched to Paper, printed
+   * once the recompile lands, and switched back. */
+  const printDocument = useCallback(() => {
+    setMenu(false)
+    if (theme.mode !== 'dark') { window.print(); return }
+    restoreTheme.current = theme.id
+    setTheme(DEFAULT_LIGHT)
+    setPrintPending(true)
+  }, [setTheme, theme.id, theme.mode])
+
+  useEffect(() => {
+    if (!printPending || busy) return
+    const timer = setTimeout(() => {
+      window.print()
+      setPrintPending(false)
+      if (restoreTheme.current) { setTheme(restoreTheme.current); restoreTheme.current = null }
+    }, 180)
+    return () => clearTimeout(timer)
+  }, [printPending, busy, setTheme])
+
   const saveSource = useCallback(() => {
     setMenu(false)
     download(doc.source, doc.name, 'text/markdown')
@@ -166,10 +191,15 @@ export function App() {
         event.preventDefault()
         saveSource()
       }
+      // Shift-D flips between the two monochrome themes without opening the menu.
+      if (event.shiftKey && event.key === 'D' && !event.metaKey && !event.ctrlKey
+          && !(event.target as HTMLElement)?.closest?.('.cm-editor, input, textarea')) {
+        toggle()
+      }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [saveSource])
+  }, [saveSource, toggle])
 
   const isEmpty = restored && doc.source.trim().length === 0
 
@@ -200,11 +230,7 @@ export function App() {
           <button className="btn btn--icon" type="button" onClick={pickFile} title="Open a file" aria-label="Open a file">
             <Icon name="file" />
           </button>
-          <button className="btn btn--icon" type="button" onClick={toggle}
-            title={theme === 'dark' ? 'Use the light theme' : 'Use the dark theme'}
-            aria-label={theme === 'dark' ? 'Use the light theme' : 'Use the dark theme'}>
-            <Icon name={theme === 'dark' ? 'sun' : 'moon'} />
-          </button>
+          <ThemeMenu />
 
           <div style={{ position: 'relative' }}>
           <button className="btn" type="button" onClick={() => setMenu((v) => !v)} aria-expanded={menu}>
@@ -212,7 +238,7 @@ export function App() {
           </button>
           {menu ? (
             <div className="menu" style={{ right: 0, top: 'calc(100% + 6px)' }} role="menu">
-              <button type="button" onClick={() => { setMenu(false); window.print() }}>
+              <button type="button" onClick={printDocument}>
                 Print or save as PDF <kbd>⌘P</kbd>
               </button>
               <button type="button" onClick={exportStandalone}>Standalone HTML</button>

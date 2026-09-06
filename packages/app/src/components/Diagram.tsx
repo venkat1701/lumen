@@ -313,7 +313,7 @@ export function Diagram({ source, id }: { source: string; id?: string }) {
   useEffect(() => {
     let live = true
     const run = () => {
-      renderDiagram(source, theme)
+      renderDiagram(source, theme.id)
         .then((result) => { if (live) { setSvg(result.svg); setError(null) } })
         .catch((cause: Error) => { if (live) setError(cause.message) })
     }
@@ -327,7 +327,7 @@ export function Diagram({ source, id }: { source: string; id?: string }) {
       if (idle) window.cancelIdleCallback(handle)
       else window.clearTimeout(handle)
     }
-  }, [source, theme])
+  }, [source, theme.id])
 
   const download = useCallback((kind: 'svg' | 'png') => {
     const image = container.current?.querySelector('svg')

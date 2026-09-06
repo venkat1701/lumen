@@ -71,3 +71,29 @@
   /* Shape colour is information, so it survives to paper. */
   .lmn-shape { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 }
+
+/* ------------------------------------------------------------------ *
+ * Themes on paper.
+ *
+ * Export switches to a light theme before printing, but a stylesheet
+ * shouldn't rely on that: these rules make any theme printable on its own.
+ * ------------------------------------------------------------------ */
+
+@media print {
+  :root { --wash: 0%; }
+
+  .lmn-callout {
+    background: none !important;
+    border-left-color: #666 !important;
+  }
+  .lmn-callout--warning, .lmn-callout--caution, .lmn-callout--important {
+    border-left-color: #000 !important;
+  }
+  .lmn-callout__head,
+  .lmn-theorem .lmn-block__label { color: #000 !important; }
+
+  /* A dark theme's code and figure colours are built for a dark page. */
+  [data-mode='dark'] .lmn-code,
+  [data-mode='dark'] .lmn-code span { color: #111 !important; }
+  [data-mode='dark'] .lmn-shape { fill: #fff !important; stroke: #555 !important; }
+}

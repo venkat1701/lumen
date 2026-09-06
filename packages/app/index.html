@@ -16,11 +16,14 @@
       rel="stylesheet"
     />
     <script>
-      // Set before first paint so the page never flashes the wrong theme.
+      // Set before first paint so the page never flashes the wrong palette.
       try {
-        const saved = localStorage.getItem('lumen.theme')
-        const dark = saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches
-        document.documentElement.dataset.theme = dark ? 'dark' : 'light'
+        var ids = ['paper', 'one-light', 'solarized', 'ink', 'one-dark', 'nord', 'gruvbox']
+        var saved = localStorage.getItem('lumen.theme')
+        var fallback = matchMedia('(prefers-color-scheme: dark)').matches ? 'ink' : 'paper'
+        var id = ids.indexOf(saved) === -1 ? fallback : saved
+        document.documentElement.dataset.theme = id
+        document.documentElement.dataset.mode = ids.indexOf(id) < 3 ? 'light' : 'dark'
       } catch {}
     </script>
   </head>

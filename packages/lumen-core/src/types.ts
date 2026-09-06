@@ -206,6 +206,9 @@ export interface CompileOptions {
   allowRawHtml?: boolean
   /** Syntax highlighting. Disable in environments without Shiki. */
   highlight?: boolean
+  /** Shiki theme for code blocks: a bundled name, or one of Lumen's own
+   *  near-monochrome pair, `lumen-light` and `lumen-dark`. */
+  codeTheme?: string
   /** Emit an HTML string alongside the hast tree. */
   stringify?: boolean
   /** Extra BibTeX, used when the document references an external file. */

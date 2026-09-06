@@ -166,7 +166,7 @@ body {
   transition: color 120ms var(--ease), border-color 120ms var(--ease);
 }
 .outline__item:hover { color: var(--ink-2); border-left-color: var(--rule-strong); }
-.outline__item[aria-current='true'] { border-left-color: var(--ink); color: var(--ink); }
+.outline__item[aria-current='true'] { border-left-color: var(--accent); color: var(--ink); }
 .outline__num {
   flex: none;
   padding-top: 0.1em;
@@ -449,3 +449,35 @@ body {
   .panes[data-mode='split'] { grid-template-columns: minmax(0, 1fr); }
   .panes[data-mode='split'] .pane--editor { display: none; }
 }
+
+/* ------------------------------------------------------------------ *
+ * Theme picker
+ * ------------------------------------------------------------------ */
+
+.swatch {
+  display: inline-grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  width: 15px;
+  height: 15px;
+  flex: none;
+  overflow: hidden;
+  border: 1px solid var(--rule-strong);
+  border-radius: 2px;
+}
+.swatch i { display: block; }
+
+.menu--themes { min-width: 15rem; }
+.menu__group {
+  padding: 0.45rem 0.55rem 0.25rem;
+  color: var(--ink-4);
+  font-size: 0.6875rem;
+}
+.menu--themes button {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.6rem;
+}
+.menu--themes button[aria-checked='true'] .menu__name { color: var(--accent); font-weight: 500; }
+.menu__note { color: var(--ink-4); font-size: 0.6875rem; }

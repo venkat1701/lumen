@@ -57,8 +57,14 @@ hover-to-trace-connections, click-to-focus, fullscreen, and SVG or PNG export.
 Node shapes are coloured by what they mean — decision, terminal, store,
 process — read from the diagram source rather than guessed from the drawing.
 
+**Themes** — seven of them, and a theme is the whole page rather than a syntax
+palette bolted onto a document: links, labels, callouts, diagram shapes and
+code all move together. Two are Lumen's own monochrome pair, Paper and Ink.
+The rest are editors you already read code in — One Light, One Dark, Nord,
+Gruvbox, Solarized — carried through the entire document.
+
 **Export** — print to a PDF that looks typeset, or save one self-contained HTML
-file with the diagrams and mathematics baked in.
+file with the diagrams, mathematics and your current theme baked in.
 
 ## The look
 
@@ -72,10 +78,18 @@ whose job is to disappear at 13px, and code is IBM Plex Mono, which has a true
 bold — the syntax theme leans on weight rather than colour, so a synthesised
 one would undo it.
 
-The page is monochrome: one ink, three greys, hairline rules, and a blue-black
-for links that reads as near-black at text size. Dark mode is grounded on
-#111 with a warmed ink, because cool grey text on a neutral black reads flat
-over a long passage. Nothing in the prose is
+Structure never changes with the palette: a theorem is always a rule and a
+small-caps label, a callout is always a rule and a run-in italic, a code block
+is always a rule and a change of weight. What a theme changes is colour, and
+how much of it — a single `--wash` token decides whether callouts are tinted at
+all, which is the whole difference between the monochrome themes and the rest.
+Figure fills are mixed from each theme's own line colours against its own page,
+so a diagram sits at the same distance from the paper in all seven.
+
+Paper and Ink spend colour in exactly one place: figures, where a flowchart's
+shapes mean different things and are allowed to look different. Ink is grounded
+on #111 with a warmed text colour, because cool grey on a neutral black reads
+flat over a long passage. Nothing in the prose is
 tinted, filled or shadowed — a theorem is a rule and a small-caps label, a
 callout is a rule and a run-in italic, a code block is a rule and a change of
 weight. The syntax theme is deliberately near-monochrome for the same reason.

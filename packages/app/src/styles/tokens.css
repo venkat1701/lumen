@@ -1,62 +1,21 @@
 /* ------------------------------------------------------------------ *
- * Lumen: paper and ink.
+ * Shared tokens. Colour lives in themes.css; this is everything that
+ * doesn't change with the palette, plus the values derived from it.
  *
  * Typefaces
  *   Newsreader for prose. KaTeX sets mathematics in Computer Modern —
  *   high contrast, vertical stress, sharp terminals — and a body face has
- *   to share that colour or every equation looks like it was pasted in
- *   from another document. Newsreader does, and it carries an optical
- *   size axis, so the title is set from the display cut and the body from
- *   the text cut rather than one drawing scaled to both.
+ *   to share that colour or every equation looks pasted in from another
+ *   document. Newsreader does, and it carries an optical size axis, so the
+ *   title is set from the display cut and the body from the text cut.
  *
- *   Archivo for chrome. Its job is to disappear at 13px next to the
- *   serif, which a grotesque with tight apertures does better than a
- *   humanist one.
- *
- *   IBM Plex Mono for code, which has a true bold — the syntax theme
- *   leans on weight rather than colour, so a synthesised bold would
- *   undo it.
- *
- * Colour
- *   One ink, three greys, a rule colour, and a blue-black for links that
- *   reads as near-black at text size. Nothing in the prose is tinted,
- *   filled or shadowed. Colour is spent only on figures, where a
- *   flowchart's shapes mean different things and are allowed to look
- *   different.
+ *   Archivo for chrome, whose job is to disappear at 13px next to the
+ *   serif. IBM Plex Mono for code, which has a true bold — Lumen's own
+ *   syntax theme leans on weight rather than colour, and a synthesised
+ *   bold would undo it.
  * ------------------------------------------------------------------ */
 
 :root {
-  --paper: #faf9f7;
-  --tone: #f2f1ee;
-  --tone-2: #eae9e5;
-
-  --ink: #14151a;
-  --ink-2: #55565c;
-  --ink-3: #86878d;
-  --ink-4: #b0b1b6;
-
-  --rule: #e2e1dc;
-  --rule-strong: #c5c4be;
-
-  --link: #23394f;
-  --link-hover: #0e2338;
-
-  --flag: #8e3b28;
-  --warn: #7d5c1c;
-
-  --fig-neutral-fill: #fbfaf8;
-  --fig-neutral-line: #a5a49f;
-  --fig-decision-fill: #f5eee0;
-  --fig-decision-line: #9c7f44;
-  --fig-terminal-fill: #e6efeb;
-  --fig-terminal-line: #4d7c71;
-  --fig-event-fill: #f5e9e4;
-  --fig-event-line: #9e6751;
-  --fig-data-fill: #e7eaf2;
-  --fig-data-line: #59658f;
-  --fig-line: #8f8e8a;
-  --fig-label: #4b4c51;
-
   --serif: 'Newsreader', 'Iowan Old Style', Charter, Georgia, serif;
   --sans: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
@@ -77,47 +36,16 @@
 
   --chrome-h: 45px;
   --ease: cubic-bezier(0.32, 0.72, 0, 1);
-
-  color-scheme: light;
 }
 
-/* ------------------------------------------------------------------ *
- * Dark: a true neutral black at #111, with a value scale built on it and
- * a slightly warm ink. A cool grey text on a neutral black reads flat;
- * warming the ink a few degrees is what keeps long passages comfortable.
- * ------------------------------------------------------------------ */
-
-[data-theme='dark'] {
-  --paper: #111111;
-  --tone: #171717;
-  --tone-2: #1d1d1c;
-
-  --ink: #e9e6e1;
-  --ink-2: #a4a09a;
-  --ink-3: #78746f;
-  --ink-4: #57544f;
-
-  --rule: #262523;
-  --rule-strong: #3b3936;
-
-  --link: #b0c1d3;
-  --link-hover: #d3dfea;
-
-  --flag: #cf8b73;
-  --warn: #bb9a5c;
-
-  --fig-neutral-fill: #1b1b1a;
-  --fig-neutral-line: #5f5d59;
-  --fig-decision-fill: #241e12;
-  --fig-decision-line: #b39561;
-  --fig-terminal-fill: #12211e;
-  --fig-terminal-line: #699e92;
-  --fig-event-fill: #241914;
-  --fig-event-line: #b7846e;
-  --fig-data-fill: #171a26;
-  --fig-data-line: #7a85b3;
-  --fig-line: #6f6c68;
-  --fig-label: #b5b1ac;
-
-  color-scheme: dark;
+/* Mixed against each theme's own page, so a diagram always sits the same
+ * distance from the paper whatever that paper happens to be. */
+:root {
+  --fig-neutral-fill: color-mix(in srgb, var(--fig-neutral-line) 10%, var(--paper));
+  --fig-decision-fill: color-mix(in srgb, var(--fig-decision-line) 17%, var(--paper));
+  --fig-terminal-fill: color-mix(in srgb, var(--fig-terminal-line) 15%, var(--paper));
+  --fig-event-fill: color-mix(in srgb, var(--fig-event-line) 15%, var(--paper));
+  --fig-data-fill: color-mix(in srgb, var(--fig-data-line) 15%, var(--paper));
+  --fig-line: var(--ink-3);
+  --fig-label: var(--ink-2);
 }

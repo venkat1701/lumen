@@ -23,7 +23,7 @@ const empty: CompiledDocument = {
  * the preview never blanks between keystrokes, and every request carries a
  * sequence number so a slow compile can't overwrite a newer one.
  */
-export function useCompiler(source: string, delay = 120) {
+export function useCompiler(source: string, codeTheme: string, delay = 120) {
   const workerRef = useRef<Worker | null>(null)
   const sequence = useRef(0)
   const [document, setDocument] = useState<CompiledDocument>(empty)
@@ -63,10 +63,10 @@ export function useCompiler(source: string, delay = 120) {
     const wait = sequence.current === 0 ? 0 : delay
     const timer = setTimeout(() => {
       setBusy(true)
-      worker.postMessage({ id: ++sequence.current, source })
+      worker.postMessage({ id: ++sequence.current, source, options: { codeTheme } })
     }, wait)
     return () => clearTimeout(timer)
-  }, [source, delay])
+  }, [source, codeTheme, delay])
 
   return useMemo(() => ({ document, busy, failure }), [document, busy, failure])
 }

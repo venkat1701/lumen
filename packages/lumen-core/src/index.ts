@@ -77,7 +77,7 @@ export async function compile(source: string, options: CompileOptions = {}): Pro
       trust: false,
       output: 'htmlAndMathml',
     } as never)
-    .use(rehypeLumenCode, context, options.highlight ?? true)
+    .use(rehypeLumenCode, context, options.highlight ?? true, options.codeTheme ?? 'lumen-light')
     .use(rehypeLumenLineMap, sink)
 
   let tree: HastRoot

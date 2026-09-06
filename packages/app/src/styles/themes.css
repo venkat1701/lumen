@@ -1,0 +1,265 @@
+/* ------------------------------------------------------------------ *
+ * Themes.
+ *
+ * Every theme sets the same tokens, so structure never changes with the
+ * palette: a theorem is always a rule and a label, a callout is always a
+ * rule and a run-in italic. What changes is colour, and how much of it —
+ * `--wash` is the single knob that decides whether callouts are tinted at
+ * all, which is what separates the monochrome themes from the rest.
+ *
+ * Figure fills are mixed from each theme's own line colours against its own
+ * page, so a diagram always sits at the same distance from the paper.
+ * ------------------------------------------------------------------ */
+
+:root,
+[data-theme='paper'] {
+  --paper: #faf9f7;
+  --tone: #f2f1ee;
+  --tone-2: #eae9e5;
+
+  --ink: #14151a;
+  --ink-2: #55565c;
+  --ink-3: #86878d;
+  --ink-4: #b0b1b6;
+
+  --rule: #e2e1dc;
+  --rule-strong: #c5c4be;
+
+  --link: #23394f;
+  --link-hover: #0e2338;
+  --accent: #14151a;
+
+  --flag: #8e3b28;
+  --warn: #7d5c1c;
+
+  --wash: 0%;
+  --callout-note: var(--rule-strong);
+  --callout-tip: var(--rule-strong);
+  --callout-warning: var(--ink);
+  --callout-important: var(--ink);
+  --callout-caution: var(--ink);
+
+  --fig-neutral-line: #a5a49f;
+  --fig-decision-line: #9c7f44;
+  --fig-terminal-line: #4d7c71;
+  --fig-event-line: #9e6751;
+  --fig-data-line: #59658f;
+
+  color-scheme: light;
+}
+
+[data-theme='ink'] {
+  --paper: #111111;
+  --tone: #171717;
+  --tone-2: #1d1d1c;
+
+  --ink: #e9e6e1;
+  --ink-2: #a4a09a;
+  --ink-3: #78746f;
+  --ink-4: #57544f;
+
+  --rule: #262523;
+  --rule-strong: #3b3936;
+
+  --link: #b0c1d3;
+  --link-hover: #d3dfea;
+  --accent: #e9e6e1;
+
+  --flag: #cf8b73;
+  --warn: #bb9a5c;
+
+  --wash: 0%;
+  --callout-note: var(--rule-strong);
+  --callout-tip: var(--rule-strong);
+  --callout-warning: var(--ink);
+  --callout-important: var(--ink);
+  --callout-caution: var(--ink);
+
+  --fig-neutral-line: #5f5d59;
+  --fig-decision-line: #b39561;
+  --fig-terminal-line: #699e92;
+  --fig-event-line: #b7846e;
+  --fig-data-line: #7a85b3;
+
+  color-scheme: dark;
+}
+
+[data-theme='one-light'] {
+  --paper: #fafafa;
+  --tone: #f0f0f1;
+  --tone-2: #eaeaeb;
+
+  --ink: #383a42;
+  --ink-2: #696c77;
+  --ink-3: #9a9ba0;
+  --ink-4: #b9babe;
+
+  --rule: #e4e4e6;
+  --rule-strong: #c9c9cd;
+
+  --link: #4078f2;
+  --link-hover: #2f5fd0;
+  --accent: #a626a4;
+
+  --flag: #e45649;
+  --warn: #c18401;
+
+  --wash: 8%;
+  --callout-note: #4078f2;
+  --callout-tip: #50a14f;
+  --callout-warning: #c18401;
+  --callout-important: #e45649;
+  --callout-caution: #986801;
+
+  --fig-neutral-line: #9a9ba0;
+  --fig-decision-line: #c18401;
+  --fig-terminal-line: #50a14f;
+  --fig-event-line: #e45649;
+  --fig-data-line: #4078f2;
+
+  color-scheme: light;
+}
+
+[data-theme='solarized'] {
+  --paper: #fdf6e3;
+  --tone: #f6efdc;
+  --tone-2: #eee8d5;
+
+  --ink: #073642;
+  --ink-2: #586e75;
+  --ink-3: #93a1a1;
+  --ink-4: #b7c0bd;
+
+  --rule: #e9e1ca;
+  --rule-strong: #d3cbb4;
+
+  --link: #268bd2;
+  --link-hover: #1a6fa8;
+  --accent: #6c71c4;
+
+  --flag: #dc322f;
+  --warn: #b58900;
+
+  --wash: 9%;
+  --callout-note: #268bd2;
+  --callout-tip: #859900;
+  --callout-warning: #b58900;
+  --callout-important: #dc322f;
+  --callout-caution: #cb4b16;
+
+  --fig-neutral-line: #93a1a1;
+  --fig-decision-line: #b58900;
+  --fig-terminal-line: #859900;
+  --fig-event-line: #dc322f;
+  --fig-data-line: #268bd2;
+
+  color-scheme: light;
+}
+
+[data-theme='one-dark'] {
+  --paper: #282c34;
+  --tone: #21252b;
+  --tone-2: #2c313a;
+
+  --ink: #c8cedb;
+  --ink-2: #9aa2b1;
+  --ink-3: #757d8c;
+  --ink-4: #5c6370;
+
+  --rule: #353b45;
+  --rule-strong: #454c59;
+
+  --link: #61afef;
+  --link-hover: #8fc6f5;
+  --accent: #c678dd;
+
+  --flag: #e06c75;
+  --warn: #e5c07b;
+
+  --wash: 12%;
+  --callout-note: #61afef;
+  --callout-tip: #98c379;
+  --callout-warning: #e5c07b;
+  --callout-important: #e06c75;
+  --callout-caution: #d19a66;
+
+  --fig-neutral-line: #5c6370;
+  --fig-decision-line: #e5c07b;
+  --fig-terminal-line: #98c379;
+  --fig-event-line: #e06c75;
+  --fig-data-line: #61afef;
+
+  color-scheme: dark;
+}
+
+[data-theme='nord'] {
+  --paper: #2e3440;
+  --tone: #292e39;
+  --tone-2: #3b4252;
+
+  --ink: #e5e9f0;
+  --ink-2: #b6c0d0;
+  --ink-3: #8a94a7;
+  --ink-4: #6b7688;
+
+  --rule: #3b4252;
+  --rule-strong: #4c566a;
+
+  --link: #88c0d0;
+  --link-hover: #a9d5e0;
+  --accent: #b48ead;
+
+  --flag: #bf616a;
+  --warn: #ebcb8b;
+
+  --wash: 13%;
+  --callout-note: #81a1c1;
+  --callout-tip: #a3be8c;
+  --callout-warning: #ebcb8b;
+  --callout-important: #bf616a;
+  --callout-caution: #d08770;
+
+  --fig-neutral-line: #4c566a;
+  --fig-decision-line: #ebcb8b;
+  --fig-terminal-line: #a3be8c;
+  --fig-event-line: #bf616a;
+  --fig-data-line: #81a1c1;
+
+  color-scheme: dark;
+}
+
+[data-theme='gruvbox'] {
+  --paper: #282828;
+  --tone: #1d2021;
+  --tone-2: #32302f;
+
+  --ink: #ebdbb2;
+  --ink-2: #bdae93;
+  --ink-3: #928374;
+  --ink-4: #7c6f64;
+
+  --rule: #3c3836;
+  --rule-strong: #504945;
+
+  --link: #83a598;
+  --link-hover: #a7c4ba;
+  --accent: #d3869b;
+
+  --flag: #fb4934;
+  --warn: #fabd2f;
+
+  --wash: 12%;
+  --callout-note: #83a598;
+  --callout-tip: #b8bb26;
+  --callout-warning: #fabd2f;
+  --callout-important: #fb4934;
+  --callout-caution: #fe8019;
+
+  --fig-neutral-line: #928374;
+  --fig-decision-line: #fabd2f;
+  --fig-terminal-line: #b8bb26;
+  --fig-event-line: #fb4934;
+  --fig-data-line: #83a598;
+
+  color-scheme: dark;
+}

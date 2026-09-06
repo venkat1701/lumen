@@ -151,9 +151,6 @@
   tab-size: 2;
 }
 .lmn-doc pre code { padding: 0; background: none; font-size: inherit; }
-.lmn-code { color: var(--lmn-tok-light); }
-.lmn-code span { color: var(--lmn-tok-light); }
-[data-theme='dark'] .lmn-code, [data-theme='dark'] .lmn-code span { color: var(--lmn-tok-dark); }
 
 /* ------------------------------ Math ------------------------------ */
 
@@ -204,7 +201,7 @@
   font-variant-caps: all-small-caps;
   letter-spacing: 0.045em;
 }
-.lmn-theorem .lmn-block__label { color: var(--ink); }
+.lmn-theorem .lmn-block__label { color: var(--accent); }
 .lmn-block__title { margin-left: 0.4em; color: var(--ink-2); font-style: italic; }
 
 /* AMS style: the label runs into the first line and the tombstone sits flush
@@ -222,10 +219,15 @@
 /* ---------------------------- Callouts ---------------------------- */
 
 .lmn-callout {
-  padding-left: 1.15rem;
-  border-left: 1px solid var(--rule-strong);
+  padding: 0.5rem 0.9rem 0.5rem 1.15rem;
+  border-left: 1px solid var(--callout-note);
+  background: color-mix(in srgb, var(--callout-note) var(--wash), transparent);
   color: var(--ink-2);
 }
+.lmn-callout--tip { border-left-color: var(--callout-tip); background: color-mix(in srgb, var(--callout-tip) var(--wash), transparent); }
+.lmn-callout--warning { border-left-color: var(--callout-warning); background: color-mix(in srgb, var(--callout-warning) var(--wash), transparent); }
+.lmn-callout--important { border-left-color: var(--callout-important); background: color-mix(in srgb, var(--callout-important) var(--wash), transparent); }
+.lmn-callout--caution { border-left-color: var(--callout-caution); background: color-mix(in srgb, var(--callout-caution) var(--wash), transparent); }
 .lmn-callout > :last-child { margin-bottom: 0; }
 .lmn-callout__head { display: inline; }
 .lmn-callout__head::after { content: '.'; margin-right: 0.4em; }
@@ -235,11 +237,25 @@
   font-style: italic;
   font-weight: 600;
 }
-/* The two that mean "stop and read this" get a heavier rule and full ink. */
+/* The three that mean "stop and read this" get a heavier rule and full ink,
+ * which is the only signal available when a theme carries no tint. */
 .lmn-callout--warning, .lmn-callout--caution, .lmn-callout--important {
   border-left-width: 2px;
-  border-left-color: var(--ink);
   color: var(--ink);
+}
+.lmn-callout--note .lmn-callout__head { color: var(--callout-note); }
+.lmn-callout--tip .lmn-callout__head { color: var(--callout-tip); }
+.lmn-callout--warning .lmn-callout__head { color: var(--callout-warning); }
+.lmn-callout--important .lmn-callout__head { color: var(--callout-important); }
+.lmn-callout--caution .lmn-callout__head { color: var(--callout-caution); }
+/* Monochrome themes have no hue to spare, so the label stays ink. */
+.lmn-callout__head { color: var(--ink); }
+@supports (color: color-mix(in srgb, red 5%, transparent)) {
+  .lmn-callout--note .lmn-callout__head { color: color-mix(in srgb, var(--callout-note) 88%, var(--ink)); }
+  .lmn-callout--tip .lmn-callout__head { color: color-mix(in srgb, var(--callout-tip) 88%, var(--ink)); }
+  .lmn-callout--warning .lmn-callout__head { color: color-mix(in srgb, var(--callout-warning) 88%, var(--ink)); }
+  .lmn-callout--important .lmn-callout__head { color: color-mix(in srgb, var(--callout-important) 88%, var(--ink)); }
+  .lmn-callout--caution .lmn-callout__head { color: color-mix(in srgb, var(--callout-caution) 88%, var(--ink)); }
 }
 
 /* ----------------------------- Asides ----------------------------- */
