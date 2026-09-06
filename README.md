@@ -20,6 +20,13 @@ Renders as **Theorem 2.1 (Cauchy–Schwarz)**, with `@thm:cs` becoming a link
 that shows the theorem when you hover it, `@eq:flux` becoming "Eq. (7)", and
 `[@fick1855]` becoming "[1]" with a reference list built for you.
 
+## Getting a document out of an LLM
+
+The syntax is small enough that a model writes it correctly once it has been
+told the rules. [`docs/llm-prompt.md`](docs/llm-prompt.md) is that briefing —
+paste it into a model, describe the document you want, and paste the reply into
+the editor. The **LLM prompt** button in the app copies the same text.
+
 ## Run it
 
 ```bash

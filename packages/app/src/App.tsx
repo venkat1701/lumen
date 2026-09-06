@@ -10,9 +10,22 @@ import { Icon } from './components/Icon.js'
 import { ThemeMenu } from './components/ThemeMenu.js'
 import { SAMPLE, SAMPLE_NAME } from './lib/sample.js'
 import { codeThemeName, DEFAULT_LIGHT } from './lib/themes.js'
+import { LLM_PROMPT } from './lib/llmPrompt.js'
 import { buildStandalone, download } from './lib/exportHtml.js'
 
 type Mode = 'read' | 'split' | 'write'
+
+const MODE_KEY = 'lumen.mode'
+
+/** A first visit opens on the rendered document; after that, whatever you last
+ *  had open. Landing in the source of a paper you haven't read is backwards. */
+function initialMode(): Mode {
+  try {
+    const saved = localStorage.getItem(MODE_KEY)
+    if (saved === 'read' || saved === 'split' || saved === 'write') return saved
+  } catch { /* private mode */ }
+  return 'read'
+}
 const MODES: Array<{ id: Mode; label: string }> = [
   { id: 'read', label: 'Read' },
   { id: 'split', label: 'Split' },
@@ -21,13 +34,18 @@ const MODES: Array<{ id: Mode; label: string }> = [
 
 export function App() {
   const [doc, setDoc, restored] = usePersistedDoc({ source: SAMPLE, name: SAMPLE_NAME })
-  const [mode, setMode] = useState<Mode>('split')
+  const [mode, setMode] = useState<Mode>(initialMode)
   const [showOutline, setShowOutline] = useState(true)
   const [showProblems, setShowProblems] = useState(false)
   const [activeHeading, setActiveHeading] = useState<string | null>(null)
   const [dropping, setDropping] = useState(false)
   const [menu, setMenu] = useState(false)
   const [firstPaint, setFirstPaint] = useState(true)
+  const [copied, setCopied] = useState(false)
+
+  useEffect(() => {
+    try { localStorage.setItem(MODE_KEY, mode) } catch { /* private mode */ }
+  }, [mode])
 
   const { theme, setTheme, toggle } = useTheme()
   const { document: compiled, busy, failure } = useCompiler(doc.source, theme.code, codeThemeName(theme))
@@ -179,6 +197,18 @@ export function App() {
     return () => clearTimeout(timer)
   }, [printPending, busy, setTheme])
 
+  /* The format is easy to write by hand and easy to get an LLM to write, but
+   * only if the model has been told the syntax. This hands over that briefing. */
+  const copyPrompt = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(LLM_PROMPT)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1800)
+    } catch {
+      window.prompt('Copy this into a model, then describe the document you want:', LLM_PROMPT)
+    }
+  }, [])
+
   const saveSource = useCallback(() => {
     setMenu(false)
     download(doc.source, doc.name, 'text/markdown')
@@ -230,6 +260,11 @@ export function App() {
           <button className="btn btn--icon" type="button" onClick={pickFile} title="Open a file" aria-label="Open a file">
             <Icon name="file" />
           </button>
+          <button className="btn" type="button" onClick={copyPrompt}
+            title="Copy a prompt that teaches a model to write Lumen">
+            {copied ? 'Copied' : 'LLM prompt'}
+          </button>
+
           <ThemeMenu />
 
           <div style={{ position: 'relative' }}>
@@ -302,7 +337,11 @@ export function App() {
             <div className="pane pane--preview" ref={preview}>
               <div className="sheet-wrap">
                 {isEmpty ? (
-                  <EmptyState onSample={() => setDoc({ source: SAMPLE, name: SAMPLE_NAME })} onOpen={pickFile} />
+                  <EmptyState
+                    onSample={() => setDoc({ source: SAMPLE, name: SAMPLE_NAME })}
+                    onOpen={pickFile}
+                    onPrompt={copyPrompt}
+                  />
                 ) : (
                   <div className={`sheet${firstPaint ? ' sheet--entering' : ''}`}>
                     <DocumentView blocks={compiled.blocks} meta={compiled.meta} />
@@ -317,14 +356,22 @@ export function App() {
   )
 }
 
-function EmptyState({ onSample, onOpen }: { onSample: () => void; onOpen: () => void }) {
+function EmptyState(
+  { onSample, onOpen, onPrompt }:
+  { onSample: () => void; onOpen: () => void; onPrompt: () => void },
+) {
   return (
     <div className="empty">
       <h2>Nothing to render yet</h2>
-      <p>Paste a document into the editor, or drop an <code>.lmd</code> or <code>.md</code> file anywhere on this page.</p>
+      <p>
+        Paste a document into the editor, or drop an <code>.lmd</code> or <code>.md</code> file
+        anywhere on this page. If you'd rather have a model write one, copy the prompt below and
+        describe what you want.
+      </p>
       <div className="empty__actions">
         <button className="btn" type="button" onClick={onSample}>Load the sample paper</button>
         <button className="btn" type="button" onClick={onOpen}>Open a file</button>
+        <button className="btn" type="button" onClick={onPrompt}>Copy the LLM prompt</button>
       </div>
     </div>
   )
