@@ -3,11 +3,12 @@
  * doesn't change with the palette, plus the values derived from it.
  *
  * Typefaces
- *   Newsreader for prose. KaTeX sets mathematics in Computer Modern —
- *   high contrast, vertical stress, sharp terminals — and a body face has
- *   to share that colour or every equation looks pasted in from another
- *   document. Newsreader does, and it carries an optical size axis, so the
- *   title is set from the display cut and the body from the text cut.
+ *   Literata for prose. It was drawn for reading books on screens: a large
+ *   x-height, sturdy stems and low contrast, which is what holds up over a
+ *   long paper. It carries an optical size axis, so the title is set from
+ *   the display cut and the body from the text cut. Its lower contrast sits
+ *   lighter than KaTeX's Computer Modern, so formulas are set a little
+ *   larger to bring the two to the same colour — see prose.css.
  *
  *   Archivo for chrome, whose job is to disappear at 13px next to the
  *   serif. IBM Plex Mono for code, which has a true bold — Lumen's own
@@ -16,23 +17,23 @@
  * ------------------------------------------------------------------ */
 
 :root {
-  --serif: 'Newsreader', 'Iowan Old Style', Charter, Georgia, serif;
+  --serif: 'Literata', 'Iowan Old Style', Charter, Georgia, serif;
   --sans: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
-  --measure: 35rem;
+  --measure: 36rem;
   --margin-col: 12.5rem;
   --gutter: 2.25rem;
 
   --step--1: 0.8125rem;
-  --step-0: 1.0625rem;
-  --step-1: 1.1875rem;
-  --step-2: 1.4375rem;
-  --step-3: 1.75rem;
-  --step-4: 2.5rem;
+  --step-0: 1.125rem;
+  --step-1: 1.25rem;
+  --step-2: 1.5rem;
+  --step-3: 1.875rem;
+  --step-4: 2.625rem;
 
-  --leading-prose: 1.62;
-  --leading-tight: 1.18;
+  --leading-prose: 1.7;
+  --leading-tight: 1.2;
 
   --chrome-h: 45px;
   --ease: cubic-bezier(0.32, 0.72, 0, 1);

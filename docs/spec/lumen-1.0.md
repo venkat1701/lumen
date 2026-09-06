@@ -184,6 +184,8 @@ The compiler never throws on document content. Problems come back as a list of
 | `citation-unknown` | No bibliography entry for a key |
 | `unsupported-directive` | A leaf directive was passed through as text |
 | `highlight-failed` | A code block couldn't be highlighted |
+| `math-invalid` | A formula could not be rendered |
+| `math-strict` | KaTeX accepted a formula but flagged it as questionable |
 
 ## 9. Output
 

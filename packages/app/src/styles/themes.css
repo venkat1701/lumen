@@ -156,6 +156,42 @@
   color-scheme: light;
 }
 
+[data-theme='tokyo-night'] {
+  --paper: #1a1b26;
+  --tone: #16161e;
+  --tone-2: #20212e;
+
+  --ink: #c0caf5;
+  --ink-2: #9aa5ce;
+  --ink-3: #737aa2;
+  --ink-4: #565f89;
+
+  --rule: #232433;
+  --rule-strong: #343a52;
+
+  --link: #7aa2f7;
+  --link-hover: #a3bdfa;
+  --accent: #bb9af7;
+
+  --flag: #f7768e;
+  --warn: #e0af68;
+
+  --wash: 14%;
+  --callout-note: #7aa2f7;
+  --callout-tip: #9ece6a;
+  --callout-warning: #e0af68;
+  --callout-important: #f7768e;
+  --callout-caution: #ff9e64;
+
+  --fig-neutral-line: #565f89;
+  --fig-decision-line: #e0af68;
+  --fig-terminal-line: #9ece6a;
+  --fig-event-line: #f7768e;
+  --fig-data-line: #7aa2f7;
+
+  color-scheme: dark;
+}
+
 [data-theme='one-dark'] {
   --paper: #282c34;
   --tone: #21252b;

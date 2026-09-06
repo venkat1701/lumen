@@ -9,7 +9,7 @@ import { Outline } from './components/Outline.js'
 import { Icon } from './components/Icon.js'
 import { ThemeMenu } from './components/ThemeMenu.js'
 import { SAMPLE, SAMPLE_NAME } from './lib/sample.js'
-import { DEFAULT_LIGHT } from './lib/themes.js'
+import { codeThemeName, DEFAULT_LIGHT } from './lib/themes.js'
 import { buildStandalone, download } from './lib/exportHtml.js'
 
 type Mode = 'read' | 'split' | 'write'
@@ -30,7 +30,7 @@ export function App() {
   const [firstPaint, setFirstPaint] = useState(true)
 
   const { theme, setTheme, toggle } = useTheme()
-  const { document: compiled, busy, failure } = useCompiler(doc.source, theme.code)
+  const { document: compiled, busy, failure } = useCompiler(doc.source, theme.code, codeThemeName(theme))
 
   const preview = useRef<HTMLDivElement>(null)
   const editorApi = useRef<{ goToLine: (line: number) => void } | null>(null)

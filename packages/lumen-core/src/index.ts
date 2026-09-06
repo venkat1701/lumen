@@ -9,6 +9,7 @@ import rehypeSanitize from 'rehype-sanitize'
 import rehypeRaw from 'rehype-raw'
 import { toHtml } from 'hast-util-to-html'
 import type { Root as HastRoot } from 'hast'
+import { visit } from 'unist-util-visit'
 
 import { Context } from './context.js'
 import { normalize } from './normalize.js'
@@ -26,6 +27,7 @@ import { rehypeLumenLineMap } from './plugins/linemap.js'
 import type { CompileOptions, CompileResult } from './types.js'
 
 export * from './types.js'
+export { buildSyntaxTheme, type SyntaxPalette, type SyntaxTheme } from './theme.js'
 export { normalize } from './normalize.js'
 export { parseBibtex, formatReference, shortAuthors, type BibEntry } from './bibtex.js'
 export { lumenSchema } from './sanitize.js'
@@ -48,6 +50,7 @@ export async function compile(source: string, options: CompileOptions = {}): Pro
   context.equationLabels = equationLabels
 
   const sink = { lineMap: [] as CompileResult['lineMap'] }
+  const seenMathWarnings = new Set<string>()
 
   const processor = unified()
     .use(remarkParse)
@@ -73,9 +76,23 @@ export async function compile(source: string, options: CompileOptions = {}): Pro
     .use(rehypeKatex, {
       macros: context.meta.macros,
       throwOnError: false,
-      strict: false,
       trust: false,
       output: 'htmlAndMathml',
+      // Fraction bars, radicals and rule lines are hairlines at Computer
+      // Modern's default; a little more weight is what makes a formula read
+      // as solid next to body text.
+      minRuleThickness: 0.06,
+      errorColor: 'currentColor',
+      // `warn` routes KaTeX's own complaints into the document's diagnostics
+      // instead of letting questionable TeX render silently.
+      strict: (code: string, message: string) => {
+        const key = `${code}:${message}`
+        if (!seenMathWarnings.has(key)) {
+          seenMathWarnings.add(key)
+          context.report('warning', 'math-strict', `In a formula: ${message}`)
+        }
+        return 'ignore'
+      },
     } as never)
     .use(rehypeLumenCode, context, options.highlight ?? true, options.codeTheme ?? 'lumen-light')
     .use(rehypeLumenLineMap, sink)
@@ -89,6 +106,8 @@ export async function compile(source: string, options: CompileOptions = {}): Pro
     tree = { type: 'root', children: [] }
   }
 
+  reportMathErrors(tree, context)
+
   return {
     tree,
     html: options.stringify ? toHtml(tree) : undefined,
@@ -100,4 +119,16 @@ export async function compile(source: string, options: CompileOptions = {}): Pro
     hasDiagrams: context.hasDiagrams,
     languages: [...context.languages],
   }
+}
+
+
+/** KaTeX renders a failed formula in place; this turns that into a diagnostic
+ *  so the problem shows up in the editor rather than only on the page. */
+function reportMathErrors(tree: HastRoot, context: Context): void {
+  visit(tree, 'element', (node) => {
+    const classes = node.properties?.className
+    if (!Array.isArray(classes) || !classes.includes('katex-error')) return
+    const detail = typeof node.properties?.title === 'string' ? node.properties.title : 'invalid TeX'
+    context.report('error', 'math-invalid', `A formula could not be rendered: ${detail}`, node.position)
+  })
 }

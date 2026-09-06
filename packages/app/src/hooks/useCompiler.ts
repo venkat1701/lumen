@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { CompileResponse, RenderBlock } from '../worker/compile.worker.js'
-import type { Diagnostic, LumenMeta, OutlineEntry } from 'lumen-core'
+import type { CompileOptions, Diagnostic, LumenMeta, OutlineEntry } from 'lumen-core'
 
 export interface CompiledDocument {
   blocks: RenderBlock[]
@@ -23,7 +23,13 @@ const empty: CompiledDocument = {
  * the preview never blanks between keystrokes, and every request carries a
  * sequence number so a slow compile can't overwrite a newer one.
  */
-export function useCompiler(source: string, codeTheme: string, delay = 120) {
+export function useCompiler(
+  source: string,
+  codeTheme: CompileOptions['codeTheme'],
+  /** Stable identity for `codeTheme`, which may be a fresh object each render. */
+  codeThemeKey: string,
+  delay = 120,
+) {
   const workerRef = useRef<Worker | null>(null)
   const sequence = useRef(0)
   const [document, setDocument] = useState<CompiledDocument>(empty)
@@ -66,7 +72,8 @@ export function useCompiler(source: string, codeTheme: string, delay = 120) {
       worker.postMessage({ id: ++sequence.current, source, options: { codeTheme } })
     }, wait)
     return () => clearTimeout(timer)
-  }, [source, codeTheme, delay])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [source, codeThemeKey, delay])
 
   return useMemo(() => ({ document, busy, failure }), [document, busy, failure])
 }

@@ -57,30 +57,41 @@ hover-to-trace-connections, click-to-focus, fullscreen, and SVG or PNG export.
 Node shapes are coloured by what they mean — decision, terminal, store,
 process — read from the diagram source rather than guessed from the drawing.
 
-**Themes** — seven of them, and a theme is the whole page rather than a syntax
+**Themes** — eight of them, and a theme is the whole page rather than a syntax
 palette bolted onto a document: links, labels, callouts, diagram shapes and
 code all move together. Two are Lumen's own monochrome pair, Paper and Ink.
-The rest are editors you already read code in — One Light, One Dark, Nord,
-Gruvbox, Solarized — carried through the entire document.
+The rest take their colours from editors you already read code in — One Light,
+Solarized, Tokyo Night, One Dark, Nord, Gruvbox — and carry them through the
+whole document.
 
 **Export** — print to a PDF that looks typeset, or save one self-contained HTML
 file with the diagrams, mathematics and your current theme baked in.
 
 ## The look
 
-Prose is set in **Newsreader**. That is a technical choice as much as an
-aesthetic one: KaTeX sets mathematics in Computer Modern — high contrast,
-vertical stress, sharp terminals — and a body face has to share that colour or
-every equation looks pasted in from another document. Newsreader also carries
-an optical size axis, so the title is set from the display cut and the body
-from the text cut rather than one drawing scaled to both. Chrome is Archivo,
-whose job is to disappear at 13px, and code is IBM Plex Mono, which has a true
-bold — the syntax theme leans on weight rather than colour, so a synthesised
-one would undo it.
+Prose is set in **Literata**, drawn for reading books on screens: large
+x-height, sturdy stems, low contrast. It carries an optical size axis, so the
+title is set from the display cut and the body from the text cut rather than
+one drawing scaled to both. Body text is 18px on a 1.7 line.
+
+Its lower contrast sits lighter than KaTeX's Computer Modern, so formulas are
+set a little larger to bring the two to the same colour, and KaTeX's rule
+thickness is raised from 0.04em to 0.06em — fraction bars and radicals are
+hairlines at the default and read as flimsy next to Literata. On dark themes
+those hairlines thin further, so maths there takes a hundredth of an em of
+stroke to hold its weight.
+
+Chrome is Archivo, whose job is to disappear at 13px. Code is IBM Plex Mono,
+which has a true bold — the monochrome syntax palettes lean on weight rather
+than colour, so a synthesised one would undo them.
 
 Structure never changes with the palette: a theorem is always a rule and a
 small-caps label, a callout is always a rule and a run-in italic, a code block
-is always a rule and a change of weight. What a theme changes is colour, and
+is always a rule and a change of weight. Nor does the highlighting scheme —
+Lumen fixes the scope-to-role mapping once (keyword violet, string green,
+number orange, function blue, type yellow, operator cyan, tag red) and each
+theme supplies colours for those roles from its own family, so code reads the
+same way in all eight rather than in eight editors' unrelated schemes. What a theme changes is colour, and
 how much of it — a single `--wash` token decides whether callouts are tinted at
 all, which is the whole difference between the monochrome themes and the rest.
 Figure fills are mixed from each theme's own line colours against its own page,

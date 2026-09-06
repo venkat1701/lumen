@@ -226,3 +226,21 @@ describe('bibtex', () => {
     expect(entry.fields.title).toBe('A Study')
   })
 })
+
+describe('formula diagnostics', () => {
+  it('reports a formula that could not be rendered', async () => {
+    const { diagnostics, html } = await render('Broken: $\\frac{1}{$ and more.')
+    expect(diagnostics.some((d) => d.ruleId === 'math-invalid' || d.ruleId === 'math-strict')).toBe(true)
+    expect(html).toContain('more.')
+  })
+
+  it('warns about questionable TeX instead of rendering it silently', async () => {
+    const { diagnostics } = await render('Unicode in maths: $ä + 1$')
+    expect(diagnostics.some((d) => d.ruleId === 'math-strict')).toBe(true)
+  })
+
+  it('leaves valid formulas alone', async () => {
+    const { diagnostics } = await render('$$\\int_0^1 x^2\\,dx = \\tfrac{1}{3}$$')
+    expect(diagnostics.filter((d) => d.ruleId.startsWith('math-'))).toHaveLength(0)
+  })
+})

@@ -1,14 +1,14 @@
 import { visit } from 'unist-util-visit'
 import type { Element, Root } from 'hast'
 import type { Context } from '../context.js'
-import { lumenDarkTheme, lumenLightTheme } from '../theme.js'
+import { buildSyntaxTheme, lumenDarkTheme, lumenLightTheme, type SyntaxTheme } from '../theme.js'
 
 type Highlighter = {
   codeToHast: (code: string, options: Record<string, unknown>) => Root
   getLoadedLanguages: () => string[]
   getLoadedThemes: () => string[]
   loadLanguage: (lang: string) => Promise<void>
-  loadTheme: (theme: string) => Promise<void>
+  loadTheme: (theme: string | object) => Promise<void>
 }
 
 let highlighterPromise: Promise<Highlighter | null> | null = null
@@ -18,7 +18,10 @@ let highlighterPromise: Promise<Highlighter | null> | null = null
  * uses and the theme it is being read in. Lumen's own near-monochrome pair is
  * always available; anything else is a bundled theme fetched on first use.
  */
-async function getHighlighter(languages: string[], theme: string): Promise<Highlighter | null> {
+async function getHighlighter(
+  languages: string[],
+  theme: string | SyntaxTheme,
+): Promise<Highlighter | null> {
   if (!highlighterPromise) {
     highlighterPromise = import('shiki')
       .then(({ createHighlighter }) =>
@@ -33,8 +36,13 @@ async function getHighlighter(languages: string[], theme: string): Promise<Highl
 
   const { bundledLanguages, bundledThemes } = await import('shiki')
 
-  if (!highlighter.getLoadedThemes().includes(theme) && theme in bundledThemes) {
-    await highlighter.loadTheme(theme).catch(() => undefined)
+  const name = typeof theme === 'string' ? theme : theme.name
+  if (!highlighter.getLoadedThemes().includes(name)) {
+    if (typeof theme !== 'string') {
+      await highlighter.loadTheme(buildSyntaxTheme(theme)).catch(() => undefined)
+    } else if (theme in bundledThemes) {
+      await highlighter.loadTheme(theme).catch(() => undefined)
+    }
   }
 
   const loaded = new Set(highlighter.getLoadedLanguages())
@@ -53,13 +61,18 @@ function dropBackground(style: unknown): string | undefined {
   return kept.length ? kept.join(';') : undefined
 }
 
-export function rehypeLumenCode(context: Context, enabled: boolean, themeName: string) {
+export function rehypeLumenCode(
+  context: Context,
+  enabled: boolean,
+  requested: string | SyntaxTheme,
+) {
   return async (tree: Root) => {
     if (!enabled || context.languages.size === 0) return
-    const highlighter = await getHighlighter([...context.languages], themeName)
+    const highlighter = await getHighlighter([...context.languages], requested)
     if (!highlighter) return
 
-    const theme = highlighter.getLoadedThemes().includes(themeName) ? themeName : 'lumen-light'
+    const name = typeof requested === 'string' ? requested : requested.name
+    const theme = highlighter.getLoadedThemes().includes(name) ? name : 'lumen-light'
     const available = new Set(highlighter.getLoadedLanguages())
 
     const jobs: Array<() => void> = []
