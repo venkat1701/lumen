@@ -11,5 +11,19 @@
     "build": "npm run build -w lumen-core && npm run build -w @lumen/app",
     "preview": "npm run preview -w @lumen/app",
     "test": "npm run test -w lumen-core"
+  },
+  "description": "Lumen: a Markdown superset for research writing, and a reader for it.",
+  "license": "AGPL-3.0-only",
+  "author": "venkat1701",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/venkat1701/lumen.git"
+  },
+  "bugs": {
+    "url": "https://github.com/venkat1701/lumen/issues"
+  },
+  "homepage": "https://github.com/venkat1701/lumen#readme",
+  "engines": {
+    "node": ">=20"
   }
 }

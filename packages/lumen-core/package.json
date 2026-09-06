@@ -2,6 +2,37 @@
   "name": "lumen-core",
   "version": "1.0.0",
   "description": "Lumen: a Markdown superset for research writing. Parser, compiler and plugins.",
+  "license": "AGPL-3.0-only",
+  "author": "venkat1701",
+  "homepage": "https://github.com/venkat1701/lumen/tree/main/packages/lumen-core#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/venkat1701/lumen.git",
+    "directory": "packages/lumen-core"
+  },
+  "bugs": {
+    "url": "https://github.com/venkat1701/lumen/issues"
+  },
+  "keywords": [
+    "markdown",
+    "commonmark",
+    "remark",
+    "rehype",
+    "unified",
+    "mdast",
+    "hast",
+    "katex",
+    "latex",
+    "math",
+    "mermaid",
+    "bibtex",
+    "citations",
+    "cross-references",
+    "theorem",
+    "academic",
+    "research",
+    "lmd"
+  ],
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -15,6 +46,10 @@
     "dist",
     "README.md"
   ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "test": "vitest run",

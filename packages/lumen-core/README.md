@@ -40,3 +40,7 @@ between keystrokes and no consumer needs `dangerouslySetInnerHTML`.
 
 The full syntax, the `lmn-*` class-name contract and the diagnostic codes are
 in [the specification](../../docs/spec/lumen-1.0.md).
+
+## Licence
+
+AGPL-3.0-only.

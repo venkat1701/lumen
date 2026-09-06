@@ -148,3 +148,9 @@ contract and the diagnostic codes.
 
 remark and rehype for Markdown that is actually CommonMark-correct, KaTeX for
 mathematics, Shiki for code, Mermaid for diagrams, CodeMirror 6 for the editor.
+
+## Licence
+
+AGPL-3.0-only. You can use, modify and redistribute this freely; if you run a
+modified version as a network service, that version's source has to be
+available to its users too.
