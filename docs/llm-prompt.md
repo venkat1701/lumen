@@ -128,6 +128,26 @@ Wrap the fence in `::: figure {#fig:x}` to give it a number and a caption.
 
 Ordinary fenced blocks with a language tag.
 
+## Mistakes models actually make
+
+These are the failures seen in real generated documents. Each one breaks the
+parse, and the last two break it silently.
+
+- **Exactly two dollar signs.** `$$$` is not display maths. A single extra `$`
+  desynchronises every `$$` after it, so one typo near the top can turn the rest
+  of the document into literal text.
+- **Every `$$` must pair.** Count them if the document is long.
+- **Frontmatter is YAML, not Markdown.** List items start with `-`, never `*` —
+  YAML reads `*` as an alias reference and rejects the whole block. Keep every
+  top-level key (`title`, `date`, `citationStyle`, `numbering`) at column zero;
+  do not indent them under an author.
+- **Escape set braces:** `X = \{x_1, \ldots, x_n\}`, not `X = {x_1,\ldots,x_n}`.
+  Bare braces are grouping in TeX and render as nothing at all.
+- **`#` and `%` are special in TeX.** Never let one land inside `$…$` or
+  `$$…$$`; write `\#` and `\%`.
+
+Blank lines *inside* `$$ … $$` are fine — Lumen handles those.
+
 ## Rules
 
 1. Output only the document. No commentary before or after.

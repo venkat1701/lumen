@@ -14,15 +14,31 @@ export interface EquationLabel {
   attributes: string
 }
 
+export interface Repair {
+  line: number
+  ruleId: string
+  message: string
+}
+
 export interface NormalizeResult {
   source: string
   /** Keyed by the 1-based source line of a display equation's closing `$$`. */
   equationLabels: Map<number, EquationLabel>
+  /** Malformed input that was corrected on the way in, worth telling the author about. */
+  repairs: Repair[]
 }
 
 const OPEN_FENCE = /^(\s*)(`{3,}|~{3,})(.*)$/
 const BLOCK_OPEN =
   /^(\s{0,3})(:{3,})[ \t]*([A-Za-z][\w-]*)[ \t]*(?:"([^"]*)"|'([^']*)')?[ \t]*(\{[^}]*\})?[ \t]*$/
+/** Three or more dollars where two were meant. A single stray `$` desynchronises
+ *  every `$$` pair after it, so this is repaired rather than left to cascade. */
+const OVERLONG_FENCE = /^(\s{0,3})\${3,}[ \t]*$/
+/** A whole display equation on one line — it opens and closes itself, so it
+ *  cannot leave the document unbalanced. */
+const SELF_CLOSING = /^\s{0,3}\$\$.*\$\$[ \t]*(\{[^}]*\})?[ \t]*$/
+/** `*` as a list marker inside YAML, which YAML reads as an alias. */
+const YAML_STAR = /^(\s*)\*(\s+\S)/
 /** A trailing `{#eq:flux}` on a display-math closing fence. */
 const EQ_ATTRS = /^(\s*\$\$)[ \t]*(\{[^}]*\})[ \t]*$/
 const INLINE_EQ = /^(\s*\$\$.*\$\$)[ \t]*(\{[^}]*\})[ \t]*$/
@@ -36,6 +52,8 @@ export function normalize(input: string): NormalizeResult {
   const lines = input.split('\n')
   const out: string[] = new Array(lines.length)
   const equationLabels = new Map<number, EquationLabel>()
+  const repairs: Repair[] = []
+  let displayFences = 0
 
   let fence: string | null = null
   let inFrontmatter = false
@@ -50,7 +68,23 @@ export function normalize(input: string): NormalizeResult {
       continue
     }
     if (inFrontmatter) {
-      if (line.trim() === '---' || line.trim() === '...') inFrontmatter = false
+      if (line.trim() === '---' || line.trim() === '...') {
+        inFrontmatter = false
+        out[i] = line
+        continue
+      }
+      // `- name:` often comes back from a model as `* name:`; YAML reads a bare
+      // `*` as an alias reference and rejects the whole block.
+      const star = YAML_STAR.exec(line)
+      if (star) {
+        out[i] = line.replace(YAML_STAR, '$1-$2')
+        repairs.push({
+          line: i + 1,
+          ruleId: 'frontmatter-list-marker',
+          message: 'Frontmatter used "*" as a list marker. YAML needs "-"; it has been read as "-".',
+        })
+        continue
+      }
       out[i] = line
       continue
     }
@@ -67,6 +101,19 @@ export function normalize(input: string): NormalizeResult {
       out[i] = line
       continue
     }
+
+    const overlong = OVERLONG_FENCE.exec(line)
+    if (overlong) {
+      out[i] = `${overlong[1]}$$`
+      displayFences++
+      repairs.push({
+        line: i + 1,
+        ruleId: 'math-fence-length',
+        message: `Display maths opens with ${line.trim().length} dollar signs; two were meant.`,
+      })
+      continue
+    }
+    if (!SELF_CLOSING.test(line) && /^\s{0,3}\$\$/.test(line)) displayFences++
 
     const block = BLOCK_OPEN.exec(line)
     if (block) {
@@ -97,5 +144,13 @@ export function normalize(input: string): NormalizeResult {
     out[i] = line
   }
 
-  return { source: out.join('\n'), equationLabels }
+  if (displayFences % 2 === 1) {
+    repairs.push({
+      line: 1,
+      ruleId: 'math-fence-unbalanced',
+      message: `The document has ${displayFences} display-maths fences, an odd number. One "$$" is unmatched, which leaves later formulas as plain text.`,
+    })
+  }
+
+  return { source: out.join('\n'), equationLabels, repairs }
 }

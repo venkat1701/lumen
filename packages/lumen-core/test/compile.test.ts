@@ -264,3 +264,37 @@ describe('typography', () => {
     expect(html).not.toContain('lmn-tie')
   })
 })
+
+describe('repairing malformed input', () => {
+  it('reads a three-dollar fence as display maths and says so', async () => {
+    const { html, diagnostics } = await render('$$$\na = b\n$$\n\nAfter.')
+    expect(html).toContain('katex')
+    expect(html).not.toContain('$$')
+    expect(diagnostics.some((d) => d.ruleId === 'math-fence-length')).toBe(true)
+  })
+
+  it('stops one bad fence from cascading through later formulas', async () => {
+    const source = ['$$$', 'a = b', '$$', '', 'Text.', '', '$$', 'c = d', '$$'].join('\n')
+    const { html } = await render(source)
+    expect(html?.match(/class="katex/g)?.length).toBeGreaterThanOrEqual(2)
+    expect(html).not.toContain('$$')
+  })
+
+  it('accepts * as a YAML list marker and reports it', async () => {
+    const { meta, diagnostics } = await render('---\ntitle: T\nauthors:\n\n* name: A. Rao\n---\n\nBody.')
+    expect(meta.title).toBe('T')
+    expect(meta.authors.map((a) => a.name)).toEqual(['A. Rao'])
+    expect(diagnostics.some((d) => d.ruleId === 'frontmatter-list-marker')).toBe(true)
+  })
+
+  it('warns when display fences do not pair up', async () => {
+    const { diagnostics } = await render('$$\na = b\n$$\n\nText.\n\n$$\nc = d')
+    expect(diagnostics.some((d) => d.ruleId === 'math-fence-unbalanced')).toBe(true)
+  })
+
+  it('leaves blank lines inside display maths alone', async () => {
+    const { html, diagnostics } = await render('$$\n\nq \\rightarrow x\n\n$$')
+    expect(html).toContain('katex')
+    expect(diagnostics.filter((d) => d.ruleId.startsWith('math-fence'))).toHaveLength(0)
+  })
+})

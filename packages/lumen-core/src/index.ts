@@ -47,8 +47,11 @@ export async function compile(source: string, options: CompileOptions = {}): Pro
   const context = new Context()
   context.allowRawHtml = options.allowRawHtml ?? false
 
-  const { source: normalized, equationLabels } = normalize(source)
+  const { source: normalized, equationLabels, repairs } = normalize(source)
   context.equationLabels = equationLabels
+  for (const repair of repairs) {
+    context.report('warning', repair.ruleId, repair.message, { start: { line: repair.line, column: 1 } })
+  }
 
   const sink = { lineMap: [] as CompileResult['lineMap'] }
   const seenMathWarnings = new Set<string>()
