@@ -1,0 +1,40 @@
+# Netlify build for the Lumen reader.
+#
+# The repo is an npm workspace: Netlify installs from the root, `npm run build`
+# compiles lumen-core and then bundles the app, and the app's dist is what gets
+# served.
+
+[build]
+  command = "npm run build"
+  publish = "packages/app/dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# The app has no client-side routing, but a stray path should still land on the
+# document rather than a 404.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Vite fingerprints everything under /assets, so it can be cached forever.
+# Most of that weight is Shiki's per-language chunks and Mermaid, which are
+# only fetched when a document actually needs them.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), camera=(), microphone=()"
